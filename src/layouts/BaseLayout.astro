@@ -1,0 +1,54 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "NEXBYTE | Tecnología gaming, comparativas y recomendaciones",
+  description = "Descubre productos gaming, comparativas claras y guías para elegir laptops, periféricos y accesorios para tu setup.",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const organization = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", name: "NEXBYTE", url: canonical.origin },
+    {
+      "@type": "WebSite",
+      name: "NEXBYTE",
+      url: canonical.origin,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${canonical.origin}/buscar?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#07152f" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/images/hero-nexbyte.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(organization)} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+    <slot />
+  </body>
+</html>

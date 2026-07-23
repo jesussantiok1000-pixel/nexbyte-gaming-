@@ -1,0 +1,12 @@
+<aside class="filters surface" aria-label="Filtros de productos">
+  <div class="filter-head"><strong>Filtrar productos</strong><button type="reset" form="filter-form" data-clear>Limpiar</button></div>
+  <form id="filter-form">
+    <fieldset><legend>Categoría</legend><label><input type="checkbox" name="categoria" value="Laptops" /> Laptops</label><label><input type="checkbox" name="categoria" value="Teclados" /> Teclados</label><label><input type="checkbox" name="categoria" value="Ratones" /> Ratones</label><label><input type="checkbox" name="categoria" value="Audio" /> Audio</label><label><input type="checkbox" name="categoria" value="Monitores" /> Monitores</label></fieldset>
+    <fieldset><legend>Conectividad</legend><label><input type="checkbox" name="conectividad" value="Inalámbrico" /> Inalámbrico</label><label><input type="checkbox" name="conectividad" value="USB" /> USB</label><label><input type="checkbox" name="conectividad" value="DisplayPort" /> DisplayPort</label></fieldset>
+    <fieldset><legend>Uso recomendado</legend><label><input type="checkbox" name="uso" value="gaming" /> Gaming</label><label><input type="checkbox" name="uso" value="streaming" /> Streaming</label><label><input type="checkbox" name="uso" value="productividad" /> Productividad</label></fieldset>
+  </form>
+</aside>
+<style>
+  .filters{position:sticky;top:155px;align-self:start;max-height:calc(100vh - 175px);overflow:auto;padding:18px}.filter-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.filter-head button{border:0;background:transparent;color:var(--color-text-muted);font-size:.72rem;cursor:pointer}.filter-head button:hover{color:var(--color-violet)}fieldset{border:0;border-top:1px solid var(--color-border);margin:0;padding:16px 0}legend{padding-top:14px;font-weight:750}fieldset label{display:flex;align-items:center;gap:9px;padding:6px 0;color:#4f5d76;font-size:.82rem}fieldset input{width:18px;height:18px;accent-color:var(--color-violet)}
+  @media(max-width:1023px){.filters{display:none}}
+</style>

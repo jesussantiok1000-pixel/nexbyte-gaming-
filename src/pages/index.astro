@@ -5,6 +5,8 @@ import SiteHeader from "../components/global/SiteHeader.astro";
 import HeroSection from "../components/home/HeroSection.astro";
 import CategoryShortcuts from "../components/home/CategoryShortcuts.astro";
 import ProductExplorer from "../components/home/ProductExplorer.astro";
+import ComparisonDock from "../components/product/ComparisonDock.astro";
+import ToastRegion from "../components/ui/ToastRegion.astro";
 ---
 <BaseLayout>
   <AffiliateBar />
@@ -14,4 +16,9 @@ import ProductExplorer from "../components/home/ProductExplorer.astro";
     <CategoryShortcuts />
     <ProductExplorer />
   </main>
+  <ComparisonDock />
+  <ToastRegion />
+  <script>
+    import "../scripts/interactions";
+  </script>
 </BaseLayout>

@@ -1,0 +1,10 @@
+<aside class="comparison-dock surface" data-comparison-dock aria-label="Comparación de productos" hidden>
+  <div class="dock-title"><span aria-hidden="true">⚖</span><div><strong>Comparar productos</strong><small>Selecciona hasta 4 productos</small></div></div>
+  <div class="dock-slots" data-dock-slots></div>
+  <a class="btn btn-primary" data-compare-link href="/comparar">Ver comparativa <span aria-hidden="true">→</span></a>
+  <button class="dock-collapse" type="button" aria-label="Contraer comparación">⌄</button>
+</aside>
+<style>
+  .comparison-dock{position:fixed;z-index:35;left:50%;bottom:18px;transform:translateX(-50%);width:min(calc(100% - 32px),1392px);min-height:88px;display:grid;grid-template-columns:230px 1fr auto 44px;align-items:center;gap:16px;padding:14px 18px;box-shadow:0 18px 55px rgb(7 21 47 / .2);animation:dock-in 240ms var(--ease-out)}.comparison-dock[hidden]{display:none}.dock-title{display:flex;align-items:center;gap:12px}.dock-title>span{font-size:1.8rem}.dock-title small{display:block;color:var(--color-text-muted)}.dock-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.dock-slot{min-height:58px;display:flex;align-items:center;gap:8px;border:1px dashed #bdc6d6;border-radius:10px;padding:6px;color:var(--color-text-muted);font-size:.72rem}.dock-slot img{width:45px;height:38px;object-fit:contain}.dock-slot button{margin-left:auto;border:0;background:transparent;font-size:1.2rem;cursor:pointer}.dock-collapse{width:44px;height:44px;border:0;background:transparent;font-size:1.3rem}@keyframes dock-in{from{opacity:0;transform:translate(-50%,20px)}}
+  @media(max-width:767px){.comparison-dock{grid-template-columns:1fr auto;min-height:70px;padding:10px 12px}.dock-title small{display:none}.dock-slots,.dock-collapse{display:none}.comparison-dock .btn{font-size:.75rem}}
+</style>

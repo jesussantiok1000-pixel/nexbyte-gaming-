@@ -2,15 +2,14 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import AffiliateBar from "../components/global/AffiliateBar.astro";
 import SiteHeader from "../components/global/SiteHeader.astro";
+import HeroSection from "../components/home/HeroSection.astro";
+import CategoryShortcuts from "../components/home/CategoryShortcuts.astro";
 ---
 <BaseLayout>
   <AffiliateBar />
   <SiteHeader />
   <main id="contenido-principal">
-    <section class="container" style="padding: 96px 0">
-      <p class="eyebrow">Selección tecnológica NEXBYTE</p>
-      <h1 class="section-heading">Tecnología para <span class="gradient-text">subir de nivel</span></h1>
-      <p>La nueva experiencia NEXBYTE está en construcción por fases verificables.</p>
-    </section>
+    <HeroSection />
+    <CategoryShortcuts />
   </main>
 </BaseLayout>

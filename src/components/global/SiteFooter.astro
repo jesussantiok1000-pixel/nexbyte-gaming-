@@ -1,0 +1,10 @@
+---
+const year=new Date().getFullYear();
+const columns=[
+  ["Explorar",[["Categorías","/categorias"],["Selección","/seleccion"],["Comparativas","/comparativas"],["Guías","/guias"]]],
+  ["Ayuda y transparencia",[["Metodología","/metodologia"],["Contacto","/contacto"],["Afiliados","/transparencia-afiliados"]]],
+  ["Legal",[["Privacidad","/privacidad"],["Cookies","/cookies"],["Términos","/terminos"]]],
+];
+---
+<footer class="site-footer"><div class="container footer-grid"><div class="footer-brand"><strong>NEX<span>BYTE</span></strong><p>Tecnología, análisis y guías para subir de nivel con decisiones más claras.</p></div>{columns.map(([title,links])=><nav aria-label={title as string}><h2>{title}</h2>{(links as string[][]).map(([label,href])=><a href={href}>{label}</a>)}</nav>)}</div><div class="container disclosure"><p>En calidad de Afiliado de Amazon, obtengo ingresos por las compras adscritas que cumplen los requisitos aplicables.</p><span>© {year} NEXBYTE</span></div></footer>
+<style>.site-footer{padding:68px 0 28px;background:var(--color-navy);color:#dbe3f2}.footer-grid{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:48px}.footer-brand strong{font-size:1.7rem;letter-spacing:.12em;color:#fff}.footer-brand strong span{color:#9a76ff}.footer-brand p{max-width:360px;color:#aeb9cd}.site-footer nav{display:flex;flex-direction:column;gap:9px}.site-footer h2{margin:0 0 8px;color:#fff;font-size:.86rem}.site-footer nav a{color:#b9c3d5;font-size:.82rem}.site-footer nav a:hover{color:#58d6f2}.disclosure{display:flex;justify-content:space-between;gap:30px;margin-top:48px;padding-top:22px;border-top:1px solid rgb(255 255 255 / .13);font-size:.72rem;color:#98a6bd}.disclosure p{margin:0;max-width:760px}.disclosure span{white-space:nowrap}@media(max-width:767px){.footer-grid{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}.disclosure{flex-direction:column}}@media(max-width:479px){.footer-grid{grid-template-columns:1fr}}</style>

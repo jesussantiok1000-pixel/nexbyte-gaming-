@@ -1,0 +1,11 @@
+---
+const faqs=[
+  ["¿NEXBYTE vende directamente los productos?","No. NEXBYTE ayuda a descubrir, entender y comparar opciones. La compra se completa en Amazon u otro comercio indicado."],
+  ["¿Por qué algunos enlaces llevan a Amazon?","Usamos enlaces de afiliado. Podemos recibir una comisión por compras adscritas, sin costo adicional para ti."],
+  ["¿Cómo se seleccionan los productos?","Evaluamos especificaciones, utilidad, contexto de uso y relación entre características. No afirmamos haber probado un producto si no fue así."],
+  ["¿Los precios y la disponibilidad pueden cambiar?","Sí. La información comercial válida es la que aparece en Amazon al momento de la visita."],
+  ["¿Necesito una cuenta de NEXBYTE para guardar favoritos?","No. En esta versión se guardan únicamente en el almacenamiento local de tu navegador y no se sincronizan entre dispositivos."],
+];
+---
+<section class="faq container" aria-labelledby="faq-title"><p class="eyebrow">Información útil</p><h2 id="faq-title" class="section-heading">Preguntas frecuentes</h2><div>{faqs.map(([question,answer])=><details><summary>{question}<span aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div></section>
+<style>.faq{padding-block:82px}.faq>div{max-width:900px;margin:28px auto 0}.faq details{border-bottom:1px solid var(--color-border)}.faq summary{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:20px;cursor:pointer;font-weight:750;list-style:none}.faq summary span{color:var(--color-violet);font-size:1.4rem;transition:transform 180ms}.faq details[open] summary span{transform:rotate(45deg)}.faq details p{margin:0;padding:0 44px 20px 0;color:var(--color-text-muted)}</style>

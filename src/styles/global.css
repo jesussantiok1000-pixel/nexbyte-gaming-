@@ -52,7 +52,41 @@ button { color: inherit; }
 .has-comparison { padding-bottom: 118px; }
 .guides, .trust, .faq, .site-footer { content-visibility: auto; contain-intrinsic-size: auto 700px; }
 
+/* Scroll choreography: groups rise as a coordinated sequence. */
+.reveal-enabled [data-reveal-item] {
+  --reveal-index: 0;
+  opacity: 0;
+  transform: translate3d(0, 34px, 0) scale(.985);
+  transition:
+    opacity 640ms var(--ease-out),
+    transform 720ms var(--ease-out);
+  transition-delay: min(calc(var(--reveal-index) * 55ms), 440ms);
+  will-change: opacity, transform;
+}
+
+.reveal-enabled [data-reveal-group][data-revealed] [data-reveal-item] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.reveal-enabled .product-card[data-reveal-item],
+.reveal-enabled .guide-card[data-reveal-item],
+.reveal-enabled .trust article[data-reveal-item] {
+  transform: translate3d(0, 42px, 0) scale(.97);
+}
+
+.reveal-enabled [data-revealed] .product-card[data-reveal-item],
+.reveal-enabled [data-revealed] .guide-card[data-reveal-item],
+.reveal-enabled [data-revealed] .trust article[data-reveal-item] {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.reveal-enabled [data-revealed] [data-reveal-item] {
+  will-change: auto;
+}
+
 @media (max-width: 767px) { .container { width: min(100% - 32px, var(--container)); } .has-comparison { padding-bottom: 90px; } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  [data-reveal-item] { opacity: 1 !important; transform: none !important; }
 }

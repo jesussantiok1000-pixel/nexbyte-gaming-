@@ -49,8 +49,10 @@ button { color: inherit; }
 .btn-secondary { background: #fff; border-color: var(--color-border); }
 .btn-secondary:hover { border-color: var(--color-violet); color: var(--color-violet); }
 .surface { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; box-shadow: 0 10px 30px rgb(27 42 79 / .06); }
+.has-comparison { padding-bottom: 118px; }
+.guides, .trust, .faq, .site-footer { content-visibility: auto; contain-intrinsic-size: auto 700px; }
 
-@media (max-width: 767px) { .container { width: min(100% - 32px, var(--container)); } }
+@media (max-width: 767px) { .container { width: min(100% - 32px, var(--container)); } .has-comparison { padding-bottom: 90px; } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }

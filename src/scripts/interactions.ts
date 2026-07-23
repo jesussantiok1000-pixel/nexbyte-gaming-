@@ -25,6 +25,7 @@ const update = () => {
   });
   const dock=document.querySelector<HTMLElement>("[data-comparison-dock]"); const slots=document.querySelector<HTMLElement>("[data-dock-slots]"); const link=document.querySelector<HTMLAnchorElement>("[data-compare-link]");
   if(dock)dock.hidden=!comparison.length;if(link)link.href=`/comparar?productos=${comparison.join(",")}`;
+  document.body.classList.toggle("has-comparison", Boolean(comparison.length));
   if(slots){slots.innerHTML="";for(let i=0;i<4;i++){const asin=comparison[i];const card=asin?document.querySelector<HTMLElement>(`[data-asin="${asin}"]`):null;const slot=document.createElement("div");slot.className="dock-slot";slot.innerHTML=card?`<img src="${card.querySelector("img")?.getAttribute("src")}" alt=""><span>${card.dataset.title}</span><button type="button" data-remove="${asin}" aria-label="Eliminar ${card.dataset.title}">×</button>`:`<span>+ Añadir producto</span>`;slots.append(slot);}}
 };
 document.querySelectorAll<HTMLElement>("[data-favorite]").forEach(button=>button.addEventListener("click",()=>{

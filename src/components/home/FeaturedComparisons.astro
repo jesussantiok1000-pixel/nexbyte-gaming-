@@ -1,0 +1,23 @@
+---
+import { comparisons } from "../../data/editorial";
+const visuals = [
+  { src: "/images/compartiva-teclado.webp", alt: "Comparativa visual entre un teclado TKL y un teclado completo" },
+  { src: "/images/comparativa-mouse.webp", alt: "Comparativa visual entre un ratón con cable y uno inalámbrico" },
+  { src: "/images/comparativa-monitor.webp", alt: "Comparativa visual entre monitores de distinta frecuencia" },
+];
+---
+<section class="comparisons container" aria-labelledby="comparativas-destacadas">
+  <div class="comparison-heading">
+    <div><p class="eyebrow">Diferencias con contexto</p><h2 id="comparativas-destacadas" class="section-heading">Comparativas para decidir mejor</h2></div>
+    <a href="/comparativas">Ver todas las comparativas <span aria-hidden="true">→</span></a>
+  </div>
+  <div class="comparison-grid">
+    {comparisons.slice(0,3).map((item,index)=><article class="comparison-card surface">
+      <a class="comparison-visual" href={`/comparativas/${item.slug}`} aria-label={`Leer ${item.title}`}><img src={visuals[index].src} alt={visuals[index].alt} width="420" height="210" loading="lazy" decoding="async" /></a>
+      <div><p>{item.category}</p><h3>{item.title}</h3><span>{item.description}</span><small>Actualizado el 23 de julio de 2026</small><a href={`/comparativas/${item.slug}`}>Leer comparativa <b aria-hidden="true">→</b></a></div>
+    </article>)}
+  </div>
+</section>
+<style>
+  .comparisons{padding-block:10px 82px}.comparison-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px}.comparison-heading>a{color:var(--color-violet);font-weight:750}.comparison-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.comparison-card{overflow:hidden;transition:transform 180ms,border-color 180ms,box-shadow 180ms}.comparison-card:hover,.comparison-card:focus-within{transform:translateY(-3px);border-color:#b9a8ec;box-shadow:0 16px 34px rgb(20 35 70 / .1)}.comparison-visual{height:180px;display:grid;place-items:center;background:linear-gradient(145deg,#f7f9fd,#e8edf7);overflow:hidden}.comparison-visual img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform 220ms var(--ease-out)}.comparison-card:hover .comparison-visual img,.comparison-card:focus-within .comparison-visual img{transform:scale(1.02)}.comparison-card>div{padding:20px}.comparison-card p{margin:0;color:var(--color-violet);font-size:.75rem;font-weight:750}.comparison-card h3{margin:6px 0;font-size:1.1rem}.comparison-card div>span,.comparison-card small{display:block;color:var(--color-text-muted);font-size:.85rem}.comparison-card small{margin-top:14px;font-size:.75rem}.comparison-card div>a{display:inline-flex;gap:8px;margin-top:14px;color:var(--color-violet);font-weight:750;font-size:.82rem}.comparison-card:hover b{transform:translateX(3px)}@media(max-width:900px){.comparison-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.comparison-grid{grid-template-columns:1fr}.comparison-heading{align-items:start;flex-direction:column}}
+</style>

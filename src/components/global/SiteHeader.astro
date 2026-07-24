@@ -1,28 +1,40 @@
 ---
 import PrimaryNavigation from "./PrimaryNavigation.astro";
+import { categories } from "../../data/categories";
 ---
 <header class="site-header" data-header>
   <div class="header-main container">
     <a class="logo" href="/" aria-label="NEXBYTE, tecnología para subir de nivel"><strong>NEX<span>BYTE</span></strong><small>Tecnología para subir de nivel</small></a>
     <form class="search" role="search" action="/buscar">
-      <label class="sr-only" for="site-search">Buscar productos, marcas o guías</label>
-      <input id="site-search" name="q" type="search" placeholder="Buscar productos, marcas o guías…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="search-suggestions" />
-      <button type="submit" aria-label="Buscar">⌕</button>
-      <div id="search-suggestions" class="suggestions surface" role="listbox" hidden></div>
+      <label class="sr-only" for="site-search">Explorar categorías de tecnología</label>
+      <input id="site-search" name="q" type="search" placeholder="¿Qué tecnología estás buscando?" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="search-suggestions" />
+      <button class="search-clear" type="button" aria-label="Limpiar búsqueda" hidden>×</button>
+      <button class="search-submit" type="submit" aria-label="Buscar">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21"><circle cx="11" cy="11" r="6.75"></circle><path d="m16 16 4 4"></path></svg>
+      </button>
+      <div id="search-suggestions" class="suggestions surface" role="listbox" aria-label="Resultados de búsqueda" hidden></div>
+      <script is:inline id="search-data" type="application/json" set:html={JSON.stringify(categories.map(({name,slug,description,icon,keywords})=>({title:name,href:`/categorias/${slug}`,description,icon,keywords})))}></script>
     </form>
     <div class="header-actions">
-      <a href="/comparar" aria-label="Comparar productos"><span aria-hidden="true">⚖</span><span class="action-label">Comparar</span><b data-compare-count hidden>0</b></a>
-      <a href="/favoritos" aria-label="Favoritos guardados"><span aria-hidden="true">♡</span><span class="action-label">Favoritos</span><b data-favorite-count hidden>0</b></a>
+      <a class="favorites-link" href="/favoritos" aria-label="Favoritos guardados">
+        <svg class="favorites-icon" aria-hidden="true" viewBox="0 0 24 24" width="24" height="24">
+          <path d="M12 20.3 4.7 13.5a5 5 0 0 1 7.3-6.8 5 5 0 0 1 7.3 6.8Z" />
+        </svg>
+        <span class="action-label">Favoritos</span><b data-favorite-count hidden>0</b>
+      </a>
       <button class="menu-button" type="button" data-mobile-trigger aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú">☰</button>
     </div>
   </div>
   <PrimaryNavigation />
-  <div id="mobile-menu" class="mobile-menu" hidden>
-    <div class="mobile-top"><strong>Navegación</strong><button type="button" data-mobile-close aria-label="Cerrar menú">×</button></div>
-    <details><summary>Categorías</summary><a href="/categorias/laptops-gaming">Laptops</a><a href="/categorias/teclados-mecanicos">Teclados</a><a href="/categorias/ratones-gaming">Ratones</a><a href="/categorias/audio-gaming">Audio</a></details>
-    <a href="/">Inicio</a><a href="/categorias/monitores-gaming">Monitores</a><a href="/categorias/setup-gaming">Setup</a><a href="/guias">Guías</a>
-  </div>
 </header>
+<div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>
+  <div class="mobile-top"><strong id="mobile-menu-title">Navegación</strong><button type="button" data-mobile-close aria-label="Cerrar menú">×</button></div>
+  <nav aria-label="Navegación móvil">
+    <a href="/">Inicio</a>
+    <details><summary>Categorías</summary><strong>Computación</strong><a href="/categorias/laptops-gaming">Laptops gaming</a><a href="/categorias/componentes">Componentes</a><strong>Periféricos</strong><a href="/categorias/teclados-mecanicos">Teclados</a><a href="/categorias/ratones-gaming">Ratones</a><a href="/categorias/accesorios-gaming">Accesorios</a><strong>Audio y video</strong><a href="/categorias/audio-gaming">Audio gaming</a><a href="/categorias/monitores-gaming">Monitores</a><strong>Setup</strong><a href="/categorias/setup-gaming">Setup gaming</a><a href="/categorias">Ver todas las categorías</a></details>
+    <a href="/seleccion">Selección NEXBYTE</a><a href="/guias">Guías</a><a href="/comparativas">Comparativas</a>
+  </nav>
+</div>
 
 <script>
   const megaTrigger = document.querySelector<HTMLElement>("[data-mega-trigger]");
@@ -39,30 +51,126 @@ import PrimaryNavigation from "./PrimaryNavigation.astro";
   const closeMobile = () => { if (!mobileMenu || !mobileTrigger) return; mobileMenu.hidden = true; mobileTrigger.setAttribute("aria-expanded","false"); document.body.style.overflow=""; mobileTrigger.focus(); };
   mobileTrigger?.addEventListener("click", () => { if (!mobileMenu) return; mobileMenu.hidden=false; mobileTrigger.setAttribute("aria-expanded","true"); document.body.style.overflow="hidden"; mobileMenu.querySelector<HTMLElement>("button")?.focus(); });
   document.querySelector("[data-mobile-close]")?.addEventListener("click", closeMobile);
-  document.addEventListener("keydown", e => { if (e.key==="Escape" && mobileMenu && !mobileMenu.hidden) closeMobile(); });
+  document.addEventListener("keydown", e => {
+    if (e.key==="Escape" && mobileMenu && !mobileMenu.hidden) closeMobile();
+    if(e.key==="Tab"&&mobileMenu&&!mobileMenu.hidden){const controls=[...mobileMenu.querySelectorAll<HTMLElement>("a,button,summary,[tabindex]:not([tabindex='-1'])")].filter(item=>!item.hasAttribute("disabled"));const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}
+  });
 
   const input = document.querySelector<HTMLInputElement>("#site-search");
   const panel = document.querySelector<HTMLElement>("#search-suggestions");
-  const suggestions = ["Laptop gaming", "Teclados mecánicos", "Ratones inalámbricos", "Guía para tu setup", "Monitores gaming", "Auriculares"];
-  let timer = 0;
+  const normalizeSearch=(value:string)=>value.normalize("NFD").replace(/\p{Diacritic}/gu,"").toLowerCase().trim().replace(/\s+/g," ");
+  const searchDataElement=document.querySelector<HTMLScriptElement>("#search-data");
+  const searchEntries:{title:string;description:string;href:string;icon:string;keywords:string[]}[]=JSON.parse(searchDataElement?.textContent||"[]");
+  const clearButton=document.querySelector<HTMLButtonElement>(".search-clear");
+  const searchForm=document.querySelector<HTMLFormElement>(".search");
+  let timer = 0, activeSearchIndex=-1;
+  const closeSearch=()=>{if(panel)panel.hidden=true;input?.setAttribute("aria-expanded","false");input?.removeAttribute("aria-activedescendant");activeSearchIndex=-1};
+  const setActiveSearch=(index:number)=>{
+    const options=[...panel?.querySelectorAll<HTMLElement>("[role=option]")??[]];if(!options.length)return;
+    activeSearchIndex=(index+options.length)%options.length;
+    options.forEach((option,i)=>option.classList.toggle("is-active",i===activeSearchIndex));
+    input?.setAttribute("aria-activedescendant",options[activeSearchIndex].id);options[activeSearchIndex].scrollIntoView({block:"nearest"});
+  };
+  const distance=(a:string,b:string)=>{const row=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){let previous=row[0];row[0]=i;for(let j=1;j<=b.length;j++){const saved=row[j];row[j]=Math.min(row[j]+1,row[j-1]+1,previous+(a[i-1]===b[j-1]?0:1));previous=saved}}return row[b.length]};
+  const rankEntry=(entry:typeof searchEntries[number],query:string)=>{
+    const title=normalizeSearch(entry.title),keywords=entry.keywords.map(normalizeSearch);
+    if(title===query)return 0;if(keywords.includes(query))return 1;
+    if(title.startsWith(query))return 2;if(keywords.some(word=>word.startsWith(query)))return 3;
+    if(title.includes(query))return 4;if(keywords.some(word=>word.includes(query)))return 5;
+    const terms=[...title.split(" "),...keywords.flatMap(word=>word.split(" "))];
+    const tolerance=query.length<=4?1:2;
+    return terms.some(term=>Math.abs(term.length-query.length)<=tolerance&&distance(term,query)<=tolerance)?6:Infinity;
+  };
+  const renderSearch=()=>{
+    if(!input||!panel)return;const query=normalizeSearch(input.value);
+    clearButton?.toggleAttribute("hidden",!input.value);
+    if(query.length<2){closeSearch();return}
+    const found=searchEntries.map(entry=>({entry,rank:rankEntry(entry,query)})).filter(result=>Number.isFinite(result.rank)).sort((a,b)=>a.rank-b.rank||a.entry.title.localeCompare(b.entry.title,"es")).slice(0,6).map(result=>result.entry);
+    activeSearchIndex=-1;
+    panel.innerHTML=found.length?`<strong>Sugerencias</strong>${found.map((entry,index)=>`<a id="search-option-${index}" role="option" href="${entry.href}"><span class="suggestion-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 3.5 3.5"></path></svg></span><span>${entry.title}</span></a>`).join("")}`:`<div class="search-empty"><b>No encontramos esa categoría</b><span>Prueba con laptops, teclados, ratones, audio, monitores o accesorios.</span><a href="/categorias">Ver todas las categorías →</a></div>`;
+    panel.hidden=false;input.setAttribute("aria-expanded","true");
+  };
   input?.addEventListener("input", () => {
-    clearTimeout(timer); const query=input.value.trim().toLowerCase();
-    if (query.length<2) { if(panel) panel.hidden=true; input.setAttribute("aria-expanded","false"); return; }
-    timer=window.setTimeout(()=>{ if(!panel)return; const found=suggestions.filter(x=>x.toLowerCase().includes(query)).slice(0,6); panel.innerHTML=`<strong>Sugerencias</strong>${found.map(x=>`<a role="option" href="/buscar?q=${encodeURIComponent(x)}">${x}</a>`).join("")}`; panel.hidden=!found.length; input.setAttribute("aria-expanded",String(Boolean(found.length))); },250);
+    clearTimeout(timer);clearButton?.toggleAttribute("hidden",!input.value);const query=normalizeSearch(input.value.trim());
+    if(query.length<2){closeSearch();return}
+    timer=window.setTimeout(renderSearch,160);
   });
+  input?.addEventListener("keydown",event=>{if(event.key==="ArrowDown"){event.preventDefault();setActiveSearch(activeSearchIndex+1)}else if(event.key==="ArrowUp"){event.preventDefault();setActiveSearch(activeSearchIndex-1)}else if(event.key==="Escape"){event.preventDefault();closeSearch()}});
+  clearButton?.addEventListener("click",()=>{if(!input)return;input.value="";clearButton.hidden=true;closeSearch();input.focus()});
+  document.addEventListener("click",event=>{if(!(event.target as Element).closest(".search"))closeSearch()});
+  searchForm?.addEventListener("submit",event=>{event.preventDefault();const selected=panel?.querySelector<HTMLAnchorElement>(".is-active")??panel?.querySelector<HTMLAnchorElement>("[role=option]");if(selected)location.href=selected.href;else if(input&&normalizeSearch(input.value).length>=2)renderSearch()});
 </script>
 
 <style>
-  .site-header { position:sticky; top:0; z-index:40; background:rgb(255 255 255 / .95); backdrop-filter:blur(14px); transition:box-shadow var(--motion-normal); }
-  .site-header.scrolled { box-shadow:0 10px 28px rgb(18 30 55 / .1); }
-  .header-main { min-height:82px; display:grid; grid-template-columns:220px minmax(300px,1fr) auto; align-items:center; gap:28px; }
+  .site-header { position:sticky; top:0; z-index:40; border-bottom:1px solid transparent; background:rgb(255 255 255 / .95); backdrop-filter:blur(14px); transition:box-shadow 180ms,border-color 180ms; }
+  .site-header.scrolled { border-bottom-color:var(--color-border);box-shadow:0 10px 28px rgb(18 30 55 / .1); }
+  .header-main { min-height:82px; display:grid; grid-template-columns:220px minmax(300px,850px) auto; justify-content:space-between; align-items:center; column-gap:36px; }
   .logo { display:flex; flex-direction:column; line-height:1; }
-  .logo strong { font-size:1.75rem; letter-spacing:.15em; font-weight:800; }.logo strong span { color:var(--color-violet); }.logo small { margin-top:6px; color:#46536d; font-size:.7rem; }
-  .search { position:relative; display:flex; height:46px; border:1px solid var(--color-border); border-radius:12px; background:#f9fbff; box-shadow:inset 0 1px 2px rgb(20 30 50 / .02); }
-  .search:focus-within { border-color:var(--color-violet); box-shadow:0 0 0 3px rgb(109 58 232 / .12); }.search input { width:100%; border:0; outline:0; background:transparent; padding:0 15px; color:var(--color-text); }.search button { width:50px; border:0; background:transparent; font-size:1.6rem; cursor:pointer; }
-  .suggestions { position:absolute; inset:calc(100% + 8px) 0 auto; z-index:20; display:flex; flex-direction:column; padding:12px; animation:mega-in 180ms var(--ease-out); }.suggestions[hidden]{display:none}.suggestions strong{font-size:.75rem;color:var(--color-text-muted);padding:5px 10px}.suggestions a{padding:9px 10px;border-radius:8px}.suggestions a:hover{background:var(--color-surface-soft);color:var(--color-violet)}
-  .header-actions { display:flex; gap:7px; }.header-actions>a,.menu-button { min-width:48px; min-height:48px; display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:12px;background:transparent;padding:0 10px;position:relative;font-size:.85rem;cursor:pointer}.header-actions>a:hover,.menu-button:hover{background:var(--color-surface-soft);color:var(--color-violet)}.header-actions>a>span:first-child{font-size:1.5rem}.header-actions b{position:absolute;top:0;right:1px;display:grid;place-items:center;min-width:19px;height:19px;border-radius:50%;background:var(--color-violet);color:#fff;font-size:.68rem}
-  .menu-button{display:none;font-size:1.3rem}.mobile-menu{position:fixed;z-index:60;inset:0 0 0 auto;width:min(88vw,380px);padding:24px;background:#fff;box-shadow:-20px 0 60px rgb(7 21 47 / .25);overflow:auto}.mobile-menu[hidden]{display:none}.mobile-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.mobile-top button{width:44px;height:44px;border:0;border-radius:50%;font-size:1.7rem;background:var(--color-surface-soft)}.mobile-menu>a,.mobile-menu details>a,.mobile-menu summary{display:block;padding:14px 8px;border-bottom:1px solid var(--color-border);font-weight:650}.mobile-menu details>a{padding-left:24px;color:var(--color-text-muted)}
+  .logo strong { font-size:1.75rem; letter-spacing:.15em; font-weight:800; }.logo strong span { color:var(--color-violet); }.logo small { margin-top:6px; color:#46536d; font-size:12px; }
+  .search { position:relative; width:100%; max-width:850px; display:flex; height:48px; border:1px solid #667085; border-radius:6px; background:#fff; box-shadow:0 2px 7px rgb(7 21 47 / .14); transition:border-color 180ms ease,box-shadow 180ms ease; }
+  .search:focus-within { border-color:#07152f; box-shadow:0 0 0 2px rgb(109 58 232 / .14),0 4px 12px rgb(7 21 47 / .16); }.search input { min-width:0;width:100%; border:0; outline:0; background:transparent; padding:0 16px; color:var(--color-text);font-size:.94rem }.search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;display:none}.search input::placeholder{color:#8a93a3}.search button { flex:0 0 46px;width:46px; border:0; background:transparent; color:#4b5565; cursor:pointer;display:grid;place-items:center }.search button:hover{color:var(--color-violet)}.search button:focus-visible{outline:2px solid var(--color-violet);outline-offset:-4px;border-radius:5px}.search-submit svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}.search-clear{font-size:1.75rem;line-height:1}.search-clear[hidden]{display:none}
+  .suggestions { position:absolute; inset:calc(100% + 6px) 0 auto; z-index:20; display:flex; gap:0;max-height:min(66vh,520px);overflow-y:auto;overscroll-behavior:contain;flex-direction:column; padding:16px 0 12px; border:1px solid #e3e6eb;border-radius:5px;background:#fff;box-shadow:0 9px 24px rgb(7 21 47 / .18);animation:search-in 200ms var(--ease-out); }.suggestions[hidden]{display:none}.suggestions>strong{font-size:.86rem;font-weight:500;color:#8a93a3;padding:0 20px 9px}.suggestions>a{display:grid;grid-template-columns:22px minmax(0,1fr);align-items:center;gap:8px;min-height:38px;padding:8px 20px;border-radius:0;color:#344054;font-size:.88rem;transition:color 180ms ease,background 180ms ease}.suggestion-icon{display:grid;place-items:center;width:20px;height:20px;color:#a3aab5;font-size:.85rem}.suggestions>a:hover,.suggestions>a:focus-visible,.suggestions>a.is-active{color:#1d2939;background:#f2efff;outline:none}.suggestions>a:hover .suggestion-icon,.suggestions>a:focus-visible .suggestion-icon,.suggestions>a.is-active .suggestion-icon{color:var(--color-violet)}.search-empty{display:flex;flex-direction:column;gap:6px;padding:8px 20px 4px;color:var(--color-text-muted)}.search-empty b{color:#07152f}.search-empty a{margin-top:6px;color:var(--color-violet);font-weight:700}.search-empty a:focus-visible{outline:2px solid var(--color-violet);outline-offset:3px}@keyframes search-in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  .header-actions { display:flex; gap:7px; }.header-actions>a,.menu-button { min-width:48px; min-height:48px; display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:12px;background:transparent;padding:0 10px;position:relative;font-size:.85rem;cursor:pointer}.header-actions>a:hover,.menu-button:hover{background:var(--color-surface-soft);color:var(--color-violet)}.favorites-icon{flex:0 0 24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:fill 180ms,color 180ms,transform 180ms var(--ease-smooth)}.favorites-link:hover .favorites-icon,.favorites-link:focus-visible .favorites-icon{fill:rgb(109 58 232 / .14);transform:scale(1.08)}.header-actions b{position:absolute;top:0;right:1px;display:grid;place-items:center;min-width:19px;height:19px;border-radius:50%;background:var(--color-violet);color:#fff;font-size:.68rem}
+  .menu-button{display:none;font-size:1.3rem}.mobile-menu{position:fixed;z-index:100;top:0;right:0;bottom:0;width:min(90vw,380px);height:100vh;height:100dvh;box-sizing:border-box;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) 20px;background:#fff;box-shadow:-20px 0 60px rgb(7 21 47 / .25);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.mobile-menu[hidden]{display:none}.mobile-menu nav{min-width:0;padding-bottom:12px}.mobile-top{position:sticky;z-index:2;top:calc(-1 * max(18px,env(safe-area-inset-top)));display:flex;justify-content:space-between;align-items:center;min-height:62px;margin:-6px 0 12px;padding:6px 0;background:rgb(255 255 255 / .96);backdrop-filter:blur(8px)}.mobile-top button{flex:0 0 44px;width:44px;height:44px;border:0;border-radius:50%;font-size:1.7rem;background:var(--color-surface-soft)}.mobile-menu nav>a,.mobile-menu details>a,.mobile-menu summary{display:block;max-width:100%;padding:14px 8px;border-bottom:1px solid var(--color-border);border-radius:10px;font-weight:650;overflow-wrap:anywhere;transition:color 180ms ease,background 180ms ease,transform 180ms var(--ease-smooth),box-shadow 180ms ease}.mobile-menu details>a{padding:10px 8px 10px 24px;color:var(--color-text-muted)}.mobile-menu nav>a:hover,.mobile-menu nav>a:focus-visible,.mobile-menu details>a:hover,.mobile-menu details>a:focus-visible,.mobile-menu summary:hover,.mobile-menu summary:focus-visible{color:#5524c9;background:linear-gradient(110deg,rgb(67 204 236 / .14),rgb(141 104 255 / .16));transform:translateX(3px) scale(1.015);box-shadow:0 7px 16px rgb(72 47 138 / .08)}.mobile-menu details strong{display:block;padding:16px 8px 4px;color:var(--color-violet);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}
   @media(max-width:1023px){.header-main{grid-template-columns:1fr auto;gap:14px;padding-block:12px}.search{grid-row:2;grid-column:1/-1}.menu-button{display:flex}.action-label{display:none}.logo small{display:none}}
-  @media(max-width:479px){.header-main{width:calc(100% - 24px)}.logo strong{font-size:1.25rem}.header-actions{gap:0}.header-actions>a,.menu-button{padding:0;min-width:42px}}
+  @media(max-width:479px){.header-main{width:calc(100% - 24px)}.logo strong{font-size:1.25rem}.header-actions{gap:0}.header-actions>a,.menu-button{padding:0;min-width:42px}.mobile-menu{width:100%;padding-left:16px}.search{height:46px}.search input{padding-inline:12px}.search button{width:42px;flex-basis:42px}.suggestions{inset-inline:-1px;max-height:min(55vh,430px);padding-block:14px 10px}.suggestions>strong,.suggestions>a{padding-inline:14px}}
+  @media(prefers-reduced-motion:reduce){.suggestions{animation:none}.suggestions a,.mobile-menu nav>a,.mobile-menu details>a,.mobile-menu summary{transition:none}.suggestions a:hover,.suggestions a:focus-visible,.mobile-menu nav>a:hover,.mobile-menu nav>a:focus-visible,.mobile-menu details>a:hover,.mobile-menu details>a:focus-visible,.mobile-menu summary:hover,.mobile-menu summary:focus-visible{transform:none}}
+</style>
+
+<style is:global>
+  #search-suggestions > strong {
+    display:block;
+    padding:0 22px 10px;
+    color:#8a93a3;
+    font-size:.84rem;
+    font-weight:500;
+  }
+  #search-suggestions > a[role="option"] {
+    display:grid;
+    grid-template-columns:22px minmax(0,1fr);
+    align-items:center;
+    gap:10px;
+    min-height:42px;
+    padding:9px 22px;
+    color:#344054;
+    font-size:.9rem;
+    line-height:1.3;
+  }
+  #search-suggestions > a[role="option"]:hover,
+  #search-suggestions > a[role="option"]:focus-visible,
+  #search-suggestions > a[role="option"].is-active {
+    color:#1d2939;
+    background:#f2efff;
+    outline:none;
+  }
+  #search-suggestions .suggestion-icon {
+    display:grid;
+    place-items:center;
+    width:22px;
+    height:22px;
+    color:#98a2b3;
+  }
+  #search-suggestions .suggestion-icon svg {
+    width:17px;
+    height:17px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.7;
+    stroke-linecap:round;
+  }
+  #search-suggestions > a[role="option"]:hover .suggestion-icon,
+  #search-suggestions > a[role="option"]:focus-visible .suggestion-icon,
+  #search-suggestions > a[role="option"].is-active .suggestion-icon {
+    color:var(--color-violet);
+  }
+  #search-suggestions > .search-empty {
+    padding:8px 22px 6px;
+  }
+  @media(max-width:479px) {
+    #search-suggestions > strong,
+    #search-suggestions > a[role="option"],
+    #search-suggestions > .search-empty {
+      padding-inline:16px;
+    }
+  }
 </style>

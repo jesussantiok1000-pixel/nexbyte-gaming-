@@ -1,0 +1,18 @@
+---
+interface Item { label:string; href?:string }
+const { items } = Astro.props as { items: Item[] };
+const breadcrumbSchema = {
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  itemListElement:items.map((item,index)=>({
+    "@type":"ListItem",
+    position:index+1,
+    name:item.label,
+    ...(item.href?{item:new URL(item.href,Astro.site??Astro.url).href}:{}),
+  })),
+};
+---
+<nav class="breadcrumbs" aria-label="Migas de pan">
+  {items.map((item,index) => <>{index > 0 && <span aria-hidden="true">/</span>}{item.href ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}</>)}
+</nav>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />

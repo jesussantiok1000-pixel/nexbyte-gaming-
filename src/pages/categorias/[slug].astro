@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/global/Breadcrumbs.astro";
+import ProductCard from "../../components/product/ProductCard.astro";
+import { categories } from "../../data/categories";
+import { productRepository } from "../../lib/products/LocalProductRepository";
+
+export async function getStaticPaths() {
+  return categories.map((category) => ({ params:{ slug:category.slug }, props:{ category } }));
+}
+const { category } = Astro.props;
+const result = await productRepository.search({ category:category.slug });
+---
+<BaseLayout title={`${category.seoTitle} | NEXBYTE`} description={category.seoDescription}>
+  <div class="container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Categorías",href:"/categorias"},{label:category.name}]} />
+    <header class="page-hero surface"><p class="eyebrow">Tipo de producto</p><h1>{category.name}</h1><p>{category.description} Conoce los puntos que pueden marcar una diferencia y compara según tus necesidades.</p></header>
+    <div class="catalog-toolbar"><p aria-live="polite"><strong>{result.total}</strong> resultados</p><label>Ordenar <select><option>Relevancia</option><option>Nombre</option></select></label></div>
+    {result.items.length ? <section class="category-grid">{result.items.map((product,index) => <ProductCard product={product} index={index} />)}</section> : <section class="empty-state surface"><h2>Explora otras opciones</h2><p>Visita nuestras demás categorías para encontrar una alternativa que encaje contigo.</p><a class="btn btn-primary" href="/categorias">Ver otras categorías</a></section>}
+    <section class="info-card surface guide"><h2>Cómo elegir en {category.name.toLowerCase()}</h2><p>Define primero tu uso, compatibilidad y presupuesto. Después compara solo las características que cambian tu experiencia y contrasta documentación verificable.</p><a class="link-arrow" href="/metodologia">Consulta nuestra metodología →</a></section>
+  </div>
+</BaseLayout>
+<style>.catalog-toolbar{display:flex;justify-content:space-between;align-items:center;margin:20px 0}.catalog-toolbar select{min-height:44px;border:1px solid var(--color-border);border-radius:10px;padding:0 12px;background:#fff}.category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.guide{margin-top:30px}@media(max-width:1100px){.category-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:800px){.category-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.category-grid{grid-template-columns:1fr}}</style>

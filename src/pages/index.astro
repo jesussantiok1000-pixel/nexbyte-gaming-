@@ -1,33 +1,25 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import AffiliateBar from "../components/global/AffiliateBar.astro";
-import SiteHeader from "../components/global/SiteHeader.astro";
-import HeroSection from "../components/home/HeroSection.astro";
+import HeroCarousel from "../components/home/HeroCarousel.astro";
 import CategoryShortcuts from "../components/home/CategoryShortcuts.astro";
 import ProductExplorer from "../components/home/ProductExplorer.astro";
-import ComparisonDock from "../components/product/ComparisonDock.astro";
-import ToastRegion from "../components/ui/ToastRegion.astro";
 import FeaturedGuides from "../components/home/FeaturedGuides.astro";
+import FeaturedComparisons from "../components/home/FeaturedComparisons.astro";
 import TrustSection from "../components/home/TrustSection.astro";
 import FaqSection from "../components/home/FaqSection.astro";
-import SiteFooter from "../components/global/SiteFooter.astro";
 ---
 <BaseLayout>
-  <AffiliateBar />
-  <SiteHeader />
-  <main id="contenido-principal">
-    <HeroSection />
+  <div class="home-stagger" data-home-stagger>
+    <HeroCarousel />
     <CategoryShortcuts />
     <ProductExplorer />
+    <FeaturedComparisons />
     <FeaturedGuides />
     <TrustSection />
     <FaqSection />
-  </main>
-  <SiteFooter />
-  <ComparisonDock />
-  <ToastRegion />
-  <script>
-    import "../scripts/interactions";
-    import "../scripts/scroll-reveal";
-  </script>
+  </div>
 </BaseLayout>
+
+<style>
+  .home-stagger { display:contents; }
+</style>

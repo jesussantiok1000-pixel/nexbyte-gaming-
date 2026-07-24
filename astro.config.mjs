@@ -5,7 +5,13 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://nexbyte-gaming.netlify.app',
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    server: {
+      watch: {
+        ignored: ['**/.codex-temp/**', '**/public/images/**']
+      }
+    }
   }
 });

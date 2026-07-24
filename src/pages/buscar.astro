@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/global/Breadcrumbs.astro";
+import { searchEntries } from "../data/search";
+---
+<BaseLayout title="Buscar contenido | NEXBYTE" description="Busca análisis, categorías, guías y comparativas en NEXBYTE." noindex>
+  <div class="container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Buscar"}]} />
+    <header class="page-hero surface"><h1>Resultados de búsqueda</h1><p>Todo el buscador funciona localmente y no envía consultas a servicios externos.</p></header>
+    <form class="big-search" role="search" data-search-page-form>
+      <label for="query">¿Qué tecnología estás buscando?</label>
+      <div><input id="query" type="search" name="q" minlength="2" maxlength="80" autocomplete="off" /><button class="btn btn-primary">Buscar</button></div>
+    </form>
+    <p class="result-status" data-search-status role="status" aria-live="polite">Escribe al menos dos caracteres.</p>
+    <section class="search-results" data-search-results hidden>
+      {searchEntries.map(entry=><article class="info-card surface" data-search-item data-search-text={`${entry.title} ${entry.description} ${entry.keywords}`}><p class="eyebrow">{entry.type}</p><h2>{entry.title}</h2><p>{entry.description}</p><a class="link-arrow" href={entry.url}>Abrir {entry.type.toLowerCase()} →</a></article>)}
+    </section>
+    <div class="empty-state surface" data-search-empty hidden><h2>No encontramos una coincidencia</h2><p>Puedes explorar nuestras categorías o probar con otro término.</p></div>
+  </div>
+  <script>
+    const pageForm=document.querySelector<HTMLFormElement>("[data-search-page-form]");
+    const pageInput=pageForm?.querySelector<HTMLInputElement>("[name=q]");
+    const pageItems=[...document.querySelectorAll<HTMLElement>("[data-search-item]")];
+    const pageResults=document.querySelector<HTMLElement>("[data-search-results]");
+    const pageEmpty=document.querySelector<HTMLElement>("[data-search-empty]");
+    const pageStatus=document.querySelector<HTMLElement>("[data-search-status]");
+    const normalizePageSearch=(value:string)=>value.normalize("NFD").replace(/\p{Diacritic}/gu,"").toLowerCase();
+    const runPageSearch=(value:string)=>{
+      const query=normalizePageSearch(value.trim());if(!pageResults||!pageEmpty||!pageStatus)return;
+      if(query.length<2){pageResults.hidden=true;pageEmpty.hidden=true;pageStatus.textContent="Escribe al menos dos caracteres.";return}
+      let count=0;pageItems.forEach(item=>{const match=normalizePageSearch(item.dataset.searchText??"").includes(query);item.hidden=!match;if(match)count++});
+      pageResults.hidden=count===0;pageEmpty.hidden=count>0;pageStatus.textContent=`${count} ${count===1?"resultado":"resultados"} para «${value.trim()}»`;
+      const url=new URL(location.href);url.searchParams.set("q",value.trim());history.replaceState(null,"",url);
+    };
+    pageForm?.addEventListener("submit",event=>{event.preventDefault();if(pageInput)runPageSearch(pageInput.value)});
+    pageInput?.addEventListener("input",()=>runPageSearch(pageInput.value));
+    const initial=new URLSearchParams(location.search).get("q")??"";if(pageInput){pageInput.value=initial;runPageSearch(initial)}
+  </script>
+</BaseLayout>
+<style>.big-search{max-width:800px;margin:0 auto 18px}.big-search label{display:block;font-weight:750;margin-bottom:8px}.big-search div{display:flex;gap:8px}.big-search input{min-height:50px;flex:1;border:1px solid var(--color-border);border-radius:12px;padding:0 16px}.result-status{margin:0 0 22px;color:var(--color-text-muted)}.search-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.search-results[hidden],.search-results [hidden],.empty-state[hidden]{display:none}@media(max-width:900px){.search-results{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.search-results{grid-template-columns:1fr}.big-search div{flex-direction:column}}</style>

@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProductCard from "../components/product/ProductCard.astro";
+import Breadcrumbs from "../components/global/Breadcrumbs.astro";
+import EditorialHero from "../components/content/EditorialHero.astro";
+import { productRepository } from "../lib/products/LocalProductRepository";
+const products = await productRepository.getFeatured();
+---
+<BaseLayout title="Selección NEXBYTE | Tecnología gaming" description="Una selección editorial pequeña basada en criterios claros.">
+  <div class="container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Selección NEXBYTE"}]} />
+    <EditorialHero image="sleccion" eyebrow="Curaduría editorial" title="Selección NEXBYTE" description="Opciones aprobadas por su equilibrio de características y utilidad. No es un ranking automático ni una promesa de que exista una única opción mejor." />
+    <p><a class="link-arrow" href="/metodologia">Qué significa esta selección →</a></p>
+    <section class="editorial-selections" aria-labelledby="selecciones-editoriales">
+      <h2 id="selecciones-editoriales">Rutas editoriales para empezar</h2>
+      <div class="content-grid">
+        <article class="info-card surface"><p class="eyebrow">Punto de partida</p><h3>Equipamiento equilibrado para empezar</h3><p>Prioriza un equipo capaz, periféricos cómodos y una pantalla coherente con el rendimiento. Mejora después de identificar una limitación real.</p><a class="link-arrow" href="/analisis/laptop-gaming-equilibrada">Revisar criterios →</a></article>
+        <article class="info-card surface"><p class="eyebrow">Uso mixto</p><h3>Accesorios útiles para estudiar y jugar</h3><p>Teclado, ratón y audio deben funcionar bien en tareas diarias además de jugar. Ergonomía y compatibilidad pesan más que la iluminación.</p><a class="link-arrow" href="/guias/elegir-teclado-mecanico">Leer guía →</a></article>
+        <article class="info-card surface"><p class="eyebrow">Mejora gradual</p><h3>Componentes prioritarios para mejorar un setup</h3><p>Empieza por postura, pantalla y el cuello de botella que puedas comprobar. Evita reemplazar varias piezas sin un objetivo medible.</p><a class="link-arrow" href="/guias/organizar-setup-ergonomico">Organizar el setup →</a></article>
+      </div>
+    </section>
+    <section class="selection-grid">{products.map((product,index)=><ProductCard product={product} index={index}/>)}</section>
+  </div>
+</BaseLayout>
+<style>.editorial-selections{margin:34px 0 42px}.selection-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}@media(max-width:850px){.selection-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.selection-grid{grid-template-columns:1fr}}</style>

@@ -1,0 +1,110 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/global/Breadcrumbs.astro";
+import ProductCard from "../../components/product/ProductCard.astro";
+import { comparisons } from "../../data/editorial";
+import { approvedProducts } from "../../data/products";
+import type { Product } from "../../data/products";
+
+export function getStaticPaths(){return comparisons.map(comparison=>({params:{slug:comparison.slug},props:{comparison}}))}
+const {comparison}=Astro.props;
+const selected = comparison.relatedSlugs
+  .map((slug:string)=>approvedProducts.find(product=>product.slug===slug))
+  .filter((product:Product|undefined):product is Product=>Boolean(product));
+const related = [...selected,...approvedProducts]
+  .filter((product,index,items)=>items.findIndex(item=>item.slug===product.slug)===index)
+  .slice(0,3);
+const canonical = new URL(`/comparativas/${comparison.slug}`,Astro.site??Astro.url);
+const articleSchema={
+  "@context":"https://schema.org","@type":"Article",
+  headline:comparison.title,description:comparison.description,
+  image:new URL(comparison.image,canonical).href,
+  datePublished:comparison.datePublished,dateModified:comparison.dateModified,
+  author:{"@type":"Organization",name:"NEXBYTE"},
+  publisher:{"@type":"Organization",name:"NEXBYTE"},
+  mainEntityOfPage:canonical.href
+};
+const toc = [
+  ["resumen","En pocas palabras"],
+  ["diferencias","Diferencias principales"],
+  ...comparison.sections.map((section:{id:string;title:string})=>[section.id,section.title]),
+  ["segun-tu-uso","Cuál elegir según tu uso"],
+  ["orientacion","Nuestra orientación"],
+  ["preguntas","Preguntas frecuentes"],
+];
+---
+<BaseLayout title={`${comparison.seoTitle} | NEXBYTE`} description={comparison.description} image={comparison.image}>
+  <div class="comparison-shell container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Comparativas",href:"/comparativas"},{label:comparison.title}]}/>
+    <article>
+      <header class="comparison-hero surface">
+        <div class="hero-content">
+          <p class="eyebrow">{comparison.category}</p>
+          <h1>{comparison.seoTitle}</h1>
+          <p class="introduction">{comparison.introduction}</p>
+          <div class="article-meta"><span>Actualizado el <time datetime={comparison.dateModified}>23 de julio de 2026</time></span><span>Lectura de 6 minutos</span><span>Por el equipo editorial de NEXBYTE</span></div>
+          <div class="chips"><span>Comparación editorial</span><span>Guía de elección</span></div>
+        </div>
+        <img src={comparison.image} alt={comparison.imageAlt} width="1536" height="1024" fetchpriority="high"/>
+      </header>
+
+      <div class="comparison-layout">
+        <div class="comparison-content">
+          <section id="resumen" class="article-section">
+            <h2>En pocas palabras</h2>
+            <div class="quick-grid">
+              {[comparison.optionA,comparison.optionB].map((option,index)=><article class:list={["quick-card",index===0?"option-a":"option-b"]}><h3>Elige {option.title.toLowerCase()} si…</h3><ul>{option.strengths.map(item=><li>{item}</li>)}</ul><strong>Considera también</strong><ul>{option.tradeoffs.map(item=><li>{item}</li>)}</ul></article>)}
+            </div>
+          </section>
+
+          <section id="diferencias" class="article-section">
+            <h2>Diferencias entre {comparison.optionA.title.toLowerCase()} y {comparison.optionB.title.toLowerCase()}</h2>
+            <div class="table-wrap">
+              <table>
+                <caption>Comparación de criterios importantes antes de elegir</caption>
+                <thead><tr><th scope="col">Aspecto</th><th scope="col">{comparison.optionA.title}</th><th scope="col">{comparison.optionB.title}</th></tr></thead>
+                <tbody>{comparison.criteria.map(row=><tr><th scope="row">{row.aspect}</th><td data-label={comparison.optionA.title}>{row.optionA}</td><td data-label={comparison.optionB.title}>{row.optionB}</td></tr>)}</tbody>
+              </table>
+            </div>
+          </section>
+
+          {comparison.sections.map(section=><section id={section.id} class="article-section"><h2>{section.title}</h2>{section.paragraphs.map(paragraph=><p>{paragraph}</p>)}{section.points&&<ul class="feature-list">{section.points.map(point=><li>{point}</li>)}</ul>}</section>)}
+
+          <section id="segun-tu-uso" class="article-section">
+            <h2>¿Cuál elegir según tu forma de usarlo?</h2>
+            <div class="use-grid">{comparison.useCases.map(item=><article><h3>{item.title}</h3><p>{item.recommendation}</p></article>)}</div>
+          </section>
+
+          <section id="orientacion" class="article-section orientation"><h2>Nuestra orientación</h2><p>{comparison.conclusion}</p></section>
+
+          <section id="preguntas" class="article-section faq-list">
+            <h2>Preguntas frecuentes</h2>
+            {comparison.faq.map(item=><details><summary>{item.question}</summary><p>{item.answer}</p></details>)}
+          </section>
+        </div>
+
+        <aside class="toc surface">
+          <strong>En esta comparativa</strong>
+          <nav aria-label="En esta comparativa">{toc.map(([id,label])=><a href={`#${id}`}>{label}</a>)}</nav>
+        </aside>
+      </div>
+
+      <section class="related-section"><h2>Continúa afinando tu elección</h2><div class="related">{related.map((product,index)=><ProductCard product={product} index={index+4}/>)}</div></section>
+    </article>
+  </div>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)}/>
+  <script>
+    const tocLinks=[...document.querySelectorAll<HTMLAnchorElement>(".toc a")];
+    const tocSections=tocLinks.map(link=>document.querySelector<HTMLElement>(link.hash)).filter(Boolean) as HTMLElement[];
+    if("IntersectionObserver" in window){
+      const tocObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)return;tocLinks.forEach(link=>link.classList.toggle("active",link.hash===`#${entry.target.id}`))}),{rootMargin:"-30% 0px -60% 0px"});
+      tocSections.forEach(section=>tocObserver.observe(section));
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  .comparison-shell{max-width:1200px}.comparison-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.9fr);gap:36px;padding:clamp(24px,4vw,46px);overflow:hidden}.hero-content{align-self:center}.comparison-hero h1{margin:8px 0 18px;color:var(--color-navy);font-size:clamp(2.35rem,4.2vw,3.45rem);font-weight:800;line-height:1.04;letter-spacing:-.045em}.introduction{max-width:70ch;color:#34405a;font-size:1.08rem;line-height:1.7}.comparison-hero>img{width:100%;height:100%;min-height:330px;object-fit:cover;border-radius:20px;box-shadow:0 14px 34px rgb(20 35 70/.12)}.article-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;color:#59667d;font-size:.82rem}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.chips span{padding:7px 11px;border:1px solid #cfc4f4;border-radius:999px;color:#5524c9;background:#f7f3ff;font-size:.78rem;font-weight:750}.comparison-layout{display:grid;grid-template-columns:minmax(0,820px) 270px;justify-content:space-between;gap:42px;margin-top:42px}.comparison-content{min-width:0}.article-section{scroll-margin-top:165px;margin-bottom:54px}.article-section h2,.related-section h2{margin:0 0 20px;color:var(--color-navy);font-size:clamp(1.75rem,3vw,2.2rem);line-height:1.16}.article-section p,.article-section li{max-width:74ch;color:#3f4d66;font-size:1rem;line-height:1.72}.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.quick-card{padding:24px;border:1px solid var(--color-border);border-top:4px solid var(--color-cyan);border-radius:18px;background:#fff;box-shadow:0 10px 28px rgb(27 42 79/.06)}.quick-card.option-b{border-top-color:var(--color-violet)}.quick-card h3{margin:0 0 14px}.quick-card strong{display:block;margin-top:15px}.quick-card ul{padding-left:20px}.table-wrap{overflow:hidden;border:1px solid var(--color-border);border-radius:18px;background:#fff}table{width:100%;border-collapse:collapse}caption{padding:14px;text-align:left;color:#59667d;font-size:.82rem}th,td{padding:15px;border-top:1px solid var(--color-border);text-align:left;vertical-align:top}thead th{border-top:0;color:#fff;background:var(--color-navy)}tbody th{color:var(--color-navy);background:#f5f7fb}.feature-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;list-style:none;padding:0}.feature-list li{padding:14px 16px;border:1px solid var(--color-border);border-radius:12px;background:#f8faff}.use-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.use-grid article{padding:20px;border:1px solid var(--color-border);border-radius:16px;background:#fff}.use-grid h3{margin:0 0 8px;font-size:1.05rem}.use-grid p{margin:0}.orientation{padding:26px;border-left:5px solid var(--color-violet);border-radius:16px;background:#f4f1ff}.orientation h2{margin-top:0}.faq-list details{margin-bottom:10px;border:1px solid var(--color-border);border-radius:14px;background:#fff}.faq-list summary{min-height:50px;padding:15px 18px;font-weight:750;cursor:pointer}.faq-list details p{margin:0;padding:0 18px 18px}.toc{position:sticky;top:155px;align-self:start;padding:20px}.toc strong{display:block;margin-bottom:12px}.toc nav{display:grid;gap:4px}.toc a{padding:8px 10px;border-left:2px solid transparent;color:#59667d;font-size:.83rem}.toc a:hover,.toc a.active{border-left-color:var(--color-violet);color:var(--color-violet);background:#f7f3ff}.related-section{margin-top:70px}.related{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  @media(max-width:900px){.comparison-hero,.comparison-layout{grid-template-columns:1fr}.comparison-hero>img{min-height:260px}.toc{position:static;grid-row:1}.toc nav{grid-template-columns:repeat(2,1fr)}.related{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:620px){.comparison-shell{width:min(100% - 32px,1200px)}.comparison-hero{padding:20px}.comparison-hero>img{min-height:210px}.quick-grid,.use-grid,.feature-list,.related{grid-template-columns:1fr}.toc nav{grid-template-columns:1fr}.table-wrap{overflow:visible;border:0;background:transparent}table,thead,tbody,tr,th,td{display:block}thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}tbody{display:grid;gap:14px}tbody tr{overflow:hidden;border:1px solid var(--color-border);border-radius:14px;background:#fff}tbody th{border-top:0}tbody td{position:relative;padding-top:38px}tbody td::before{content:attr(data-label);position:absolute;top:12px;left:15px;color:var(--color-violet);font-size:.75rem;font-weight:800}}
+</style>

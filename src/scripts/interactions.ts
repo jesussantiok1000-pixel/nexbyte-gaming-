@@ -1,5 +1,4 @@
 const FAVORITES_KEY = "nexbyte:favorites";
-const COMPARE_KEY = "nexbyte:comparison";
 const read = (key: string): string[] => {
   try { return JSON.parse(localStorage.getItem(key) ?? "[]"); } catch { return []; }
 };
@@ -14,25 +13,45 @@ const toast = (message: string) => {
   setTimeout(() => item.remove(), 3600);
 };
 const update = () => {
-  const favorites = read(FAVORITES_KEY), comparison = read(COMPARE_KEY);
+  const favorites = read(FAVORITES_KEY);
   const favoriteCount = document.querySelector<HTMLElement>("[data-favorite-count]");
-  const compareCount = document.querySelector<HTMLElement>("[data-compare-count]");
   if (favoriteCount) { favoriteCount.textContent=String(favorites.length); favoriteCount.hidden=!favorites.length; }
-  if (compareCount) { compareCount.textContent=String(comparison.length); compareCount.hidden=!comparison.length; }
   document.querySelectorAll<HTMLElement>("[data-product]").forEach(card => {
-    const asin=card.dataset.asin??""; const fav=card.querySelector<HTMLElement>("[data-favorite]"); const compare=card.querySelector<HTMLInputElement>("[data-compare]");
-    fav?.setAttribute("aria-pressed",String(favorites.includes(asin))); if(fav)fav.textContent=favorites.includes(asin)?"♥":"♡"; if(compare)compare.checked=comparison.includes(asin);
+    const slug=card.dataset.slug??""; const fav=card.querySelector<HTMLElement>("[data-favorite]");
+    const active=favorites.includes(slug);fav?.setAttribute("aria-pressed",String(active));
+    const icon=fav?.querySelector<HTMLElement>("[data-favorite-icon]");if(icon)icon.textContent=active?"♥":"♡";
+    if(fav)fav.setAttribute("aria-label",`${active?"Quitar":"Añadir"} ${card.dataset.title??"producto"} ${active?"de":"a"} favoritos`);
   });
-  const dock=document.querySelector<HTMLElement>("[data-comparison-dock]"); const slots=document.querySelector<HTMLElement>("[data-dock-slots]"); const link=document.querySelector<HTMLAnchorElement>("[data-compare-link]");
-  if(dock)dock.hidden=!comparison.length;if(link)link.href=`/comparar?productos=${comparison.join(",")}`;
-  document.body.classList.toggle("has-comparison", Boolean(comparison.length));
-  if(slots){slots.innerHTML="";for(let i=0;i<4;i++){const asin=comparison[i];const card=asin?document.querySelector<HTMLElement>(`[data-asin="${asin}"]`):null;const slot=document.createElement("div");slot.className="dock-slot";slot.innerHTML=card?`<img src="${card.querySelector("img")?.getAttribute("src")}" alt=""><span>${card.dataset.title}</span><button type="button" data-remove="${asin}" aria-label="Eliminar ${card.dataset.title}">×</button>`:`<span>+ Añadir producto</span>`;slots.append(slot);}}
 };
-document.querySelectorAll<HTMLElement>("[data-favorite]").forEach(button=>button.addEventListener("click",()=>{
-  const asin=button.closest<HTMLElement>("[data-product]")?.dataset.asin??"";let values=read(FAVORITES_KEY);const active=values.includes(asin);values=active?values.filter(v=>v!==asin):[...values,asin];write(FAVORITES_KEY,values);toast(active?"Eliminado de favoritos":"Añadido a favoritos");update();
-}));
-document.querySelectorAll<HTMLInputElement>("[data-compare]").forEach(input=>input.addEventListener("change",()=>{
-  const asin=input.closest<HTMLElement>("[data-product]")?.dataset.asin??"";let values=read(COMPARE_KEY);if(input.checked){if(values.length>=4){input.checked=false;toast("Puedes comparar hasta 4 productos");return;}values=[...values,asin];toast("Producto añadido a la comparación");}else values=values.filter(v=>v!==asin);write(COMPARE_KEY,values);update();
-}));
-document.querySelector("[data-dock-slots]")?.addEventListener("click",event=>{const button=(event.target as Element).closest<HTMLElement>("[data-remove]");if(!button)return;write(COMPARE_KEY,read(COMPARE_KEY).filter(v=>v!==button.dataset.remove));update();});
+let favoriteAnimation: Animation | null = null;
+let counterAnimation: Animation | null = null;
+document.addEventListener("click",(event)=>{
+  const button=(event.target as Element).closest<HTMLElement>("[data-favorite]");
+  if(!button)return;
+  const slug=button.closest<HTMLElement>("[data-product]")?.dataset.slug??"";
+  let values=read(FAVORITES_KEY);
+  const active=values.includes(slug);
+  const counter=document.querySelector<HTMLElement>("[data-favorite-count]");
+  values=active?values.filter(v=>v!==slug):[...values,slug];
+  write(FAVORITES_KEY,values);
+  update();
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+    favoriteAnimation?.cancel();
+    favoriteAnimation=button.animate(
+      active?[{transform:"scale(1)"},{transform:"scale(.82)"},{transform:"scale(1)"}]:[{transform:"scale(1)"},{transform:"scale(.78)"},{transform:"scale(1.24)"},{transform:"scale(.96)"},{transform:"scale(1)"}],
+      {duration:active?260:460,easing:"cubic-bezier(.22, 1, .36, 1)"}
+    );
+    button.classList.toggle("is-celebrating",!active);
+    favoriteAnimation.finished.finally(()=>button.classList.remove("is-celebrating"));
+    if(counter){
+      counterAnimation?.cancel();
+      counterAnimation=counter.animate(
+        [{transform:"translateY(0)",opacity:1},{transform:"translateY(-7px)",opacity:0},{transform:"translateY(7px)",opacity:0},{transform:"translateY(0)",opacity:1}],
+        {duration:360,easing:"ease-out"}
+      );
+    }
+  }
+  toast(active?"Eliminado de favoritos":"Añadido a favoritos");
+});
 update();
+window.addEventListener("nexbyte:favorites-changed", update);

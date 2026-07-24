@@ -1,17 +1,26 @@
 ---
 import "../styles/global.css";
+import "../styles/motion.css";
+import SiteHeader from "../components/global/SiteHeader.astro";
+import SiteFooter from "../components/global/SiteFooter.astro";
+import ToastRegion from "../components/ui/ToastRegion.astro";
 
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
+  image?: string;
 }
 
 const {
   title = "NEXBYTE | Tecnología gaming, comparativas y recomendaciones",
   description = "Descubre productos gaming, comparativas claras y guías para elegir laptops, periféricos y accesorios para tu setup.",
+  noindex = false,
+  image = "/images/image-2.png",
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const socialImage = new URL(image, canonical.origin);
 const organization = {
   "@context": "https://schema.org",
   "@graph": [
@@ -33,22 +42,38 @@ const organization = {
 <!doctype html>
 <html lang="es">
   <head>
+    <script is:inline>document.documentElement.classList.add("js");</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#07152f" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/images/hero-nexbyte.png" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content={title} />
     <meta name="twitter:card" content="summary_large_image" />
-    <script type="application/ld+json" set:html={JSON.stringify(organization)} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organization)} />
     <title>{title}</title>
   </head>
   <body>
     <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
-    <slot />
+    <SiteHeader />
+    <main id="contenido-principal">
+      <slot />
+    </main>
+    <SiteFooter />
+    <ToastRegion />
+    <script>
+      import "../scripts/interactions";
+      import "../scripts/motion";
+    </script>
   </body>
 </html>

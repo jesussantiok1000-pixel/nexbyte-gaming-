@@ -1,14 +1,17 @@
 ---
 const categories = [
-  ["✦","Selección NEXBYTE","/seleccion"],["▱","Laptops gaming","/categorias/laptops-gaming"],["⌨","Teclados mecánicos","/categorias/teclados-mecanicos"],
-  ["♙","Ratones gaming","/categorias/ratones-gaming"],["♬","Auriculares","/categorias/audio-gaming"],["▣","Monitores","/categorias/monitores-gaming"],
-  ["♜","Sillas gamer","/categorias/sillas-gaming"],["▦","Componentes","/categorias/componentes"],["⌁","Accesorios","/categorias/accesorios-gaming"],
+  ["▱","Laptops gaming","/categorias/laptops-gaming","laptop"],["⌨","Teclados mecánicos","/categorias/teclados-mecanicos","keyboard"],
+  ["♙","Ratones gaming","/categorias/ratones-gaming","mouse"],["♬","Auriculares","/categorias/audio-gaming","audio"],["▣","Monitores","/categorias/monitores-gaming","monitor"],
+  ["♜","Setup gaming","/categorias/setup-gaming","setup"],["▦","Componentes","/categorias/componentes","component"],["⌁","Accesorios","/categorias/accesorios-gaming","accessory"],
 ];
 ---
-<nav class="shortcuts container" aria-label="Categorías destacadas">
-  {categories.map(([icon,label,href],i)=><a href={href} class:list={{selected:i===0}}><span aria-hidden="true">{icon}</span><span>{label}</span></a>)}
-</nav>
+<section class="shortcut-section container" aria-labelledby="shortcut-title">
+  <p id="shortcut-title">Explora por categoría</p>
+  <nav class="shortcuts" aria-label="Categorías destacadas">
+    {categories.map(([icon,label,href,motion])=><a class="category-shortcut" href={href}><span aria-hidden="true" data-icon-motion={motion}>{icon}</span><span>{label}</span></a>)}
+  </nav>
+</section>
 <style>
-  .shortcuts{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:10px;padding-block:16px 28px}.shortcuts a{min-height:64px;display:flex;align-items:center;justify-content:center;gap:9px;padding:8px;border:1px solid var(--color-border);border-radius:12px;background:#fff;color:#34405a;font-size:.75rem;font-weight:650;text-align:center;transition:transform var(--motion-normal),border-color var(--motion-normal),box-shadow var(--motion-normal)}.shortcuts a>span:first-child{color:var(--color-cyan);font-size:1.35rem}.shortcuts a:hover{transform:translateY(-2px);border-color:#9b79f4;box-shadow:0 8px 20px rgb(30 50 90 / .08)}.shortcuts a:hover>span:first-child,.shortcuts .selected{color:var(--color-violet)}.shortcuts .selected{border-color:var(--color-violet)}
+  .shortcut-section{padding-block:14px 10px}.shortcut-section>p{margin:0 0 9px;color:var(--color-text-muted);font-size:.78rem;font-weight:750;text-transform:uppercase;letter-spacing:.08em}.shortcuts{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px}.shortcuts a{height:66px;display:flex;align-items:center;justify-content:center;gap:9px;padding:10px 12px;border:1px solid var(--color-border);border-radius:12px;background:#fff;color:#34405a;font-size:.78rem;font-weight:650;text-align:center;white-space:nowrap;transition:transform 180ms var(--ease-standard),border-color 180ms,background 180ms,box-shadow 180ms}.shortcuts a>span:first-child{flex:0 0 auto;color:var(--color-cyan);font-size:1.35rem;transition:transform 180ms var(--ease-emphasized),color 180ms}.shortcuts a:hover,.shortcuts a:focus-visible{transform:translateY(-3px);border-color:var(--color-violet);background:rgb(24 167 201 / .055);box-shadow:0 8px 20px rgb(30 50 90 / .08)}.shortcuts a:hover>span:first-child,.shortcuts a:focus-visible>span:first-child{color:var(--color-violet);transform:scale(1.08) translateY(-1px)}
   @media(max-width:1023px){.shortcuts{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.shortcuts a{min-width:165px;scroll-snap-align:start}}
 </style>

@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/global/Breadcrumbs.astro";
+import { categories } from "../../data/categories";
+---
+<BaseLayout title="Categorías de tecnología gaming | NEXBYTE" description="Explora tecnología gaming por categoría.">
+  <div class="container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Categorías"}]} />
+    <header class="page-hero surface categories-hero"><h1>Explora tecnología gaming por categoría</h1><p>Empieza por el tipo de equipo que necesitas y encuentra criterios claros para comparar opciones.</p></header>
+    <section class="content-grid" aria-label="Categorías">
+      {categories.map(category => <article class="info-card surface"><img src={category.coverImage} alt={`Imagen de ${category.name}`} width="480" height="300" loading="lazy" decoding="async" /><span aria-hidden="true">{category.icon}</span><h2>{category.name}</h2><p>{category.description}</p><a class="link-arrow" href={`/categorias/${category.slug}`}>Explorar categoría →</a></article>)}
+    </section>
+    <aside class="info-card surface start"><h2>¿No sabes por dónde empezar?</h2><p>Consulta nuestra selección editorial o aprende cómo evaluamos cada opción.</p><a class="btn btn-primary" href="/seleccion">Ver selección NEXBYTE</a> <a class="btn btn-secondary" href="/metodologia">Conocer metodología</a></aside>
+  </div>
+</BaseLayout>
+<style>
+  .categories-hero{min-height:320px;display:flex;flex-direction:column;justify-content:center;background-image:linear-gradient(90deg,rgb(7 21 47 / .98) 0%,rgb(9 28 70 / .86) 38%,rgb(9 28 70 / .18) 68%,transparent 100%),url("/images/categoria.webp");background-position:center;background-size:cover;background-repeat:no-repeat;box-shadow:0 18px 42px rgb(22 35 71 / .14)}
+  .categories-hero h1,.categories-hero p{position:relative;z-index:1}.categories-hero h1{max-width:720px}.categories-hero p{max-width:590px;color:#e3eafa;text-shadow:0 1px 12px rgb(4 15 41 / .35)}
+  .info-card img{width:100%;height:180px;object-fit:cover;object-position:center;background:var(--color-surface-soft);border-radius:12px;transition:transform 220ms var(--ease-out)}.info-card{overflow:hidden}.info-card:hover img,.info-card:focus-within img{transform:scale(1.02)}.info-card>span{display:block;margin-top:14px;color:var(--color-violet)}.start{margin-top:28px;text-align:center}
+  @media(max-width:800px){.categories-hero{min-height:290px;background-position:58% center}}
+  @media(max-width:520px){.categories-hero{min-height:270px;padding:28px 24px;background-image:linear-gradient(90deg,rgb(7 21 47 / .96),rgb(9 28 70 / .7)),url("/images/categoria.webp");background-position:60% center}}
+</style>

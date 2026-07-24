@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/global/Breadcrumbs.astro";
+import ProductCard from "../../components/product/ProductCard.astro";
+import { approvedProducts } from "../../data/products";
+import type { Product } from "../../data/products";
+import { categoryBySlug } from "../../data/categories";
+
+export function getStaticPaths() {
+  return approvedProducts.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+
+const { product } = Astro.props;
+const category = categoryBySlug(product.categorySlug);
+const related = product.relatedSlugs
+  .map((slug: string) => approvedProducts.find((item) => item.slug === slug))
+  .filter((item:Product|undefined):item is Product=>Boolean(item))
+  .slice(0, 3);
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: product.analysisTitle,
+  description: product.shortDescription,
+  image: new URL(product.image,Astro.site??Astro.url).href,
+  datePublished: product.updatedAt,
+  dateModified: product.updatedAt,
+  author: { "@type": "Organization", name: "NEXBYTE" },
+  publisher: { "@type": "Organization", name: "NEXBYTE" },
+  mainEntityOfPage: new URL(product.analysisUrl,Astro.site??Astro.url).href,
+};
+---
+<BaseLayout title={`${product.analysisTitle} | NEXBYTE`} description={product.shortDescription} image={product.image}>
+  <div class="container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Análisis",href:"/seleccion"},{label:product.title}]} />
+    <article>
+      <header class="analysis-hero surface" data-product data-slug={product.slug} data-title={product.title}>
+        <img src={product.image} alt={product.imageAlt} width="1536" height="1024" fetchpriority="high" />
+        <div>
+          <p class="eyebrow">{category?.name ?? product.category}</p>
+          <h1>{product.analysisTitle}</h1>
+          <p>{product.shortDescription}</p>
+          <button class="btn btn-secondary" type="button" data-favorite aria-pressed="false" aria-label={`Añadir ${product.title} a favoritos`}><span data-favorite-icon aria-hidden="true">♡</span> Favorito</button>
+        </div>
+      </header>
+
+      <div class="analysis-layout">
+        <div class="prose">
+          <section><h2>Lo primero que debes saber</h2><p>Conocer tus prioridades te ayudará a comparar opciones con más claridad y concentrarte en las características que realmente pueden mejorar tu experiencia.</p></section>
+          <section><h2>¿Es para ti?</h2><ul>{product.recommendedFor.map((item) => <li>{item}</li>)}</ul></section>
+          <section><h2>Lo que puede aportar</h2><ul>{product.features.map((item) => <li>{item}</li>)}</ul></section>
+          <section><h2>Cómo puede mejorar tu experiencia</h2><ul>{product.advantages.map((item) => <li>{item}</li>)}</ul></section>
+          <section><h2>Antes de decidir</h2><ul>{product.limitations.map((item) => <li>{item}</li>)}</ul></section>
+          <section><h2>Evita estos errores</h2><ul>{product.commonMistakes.map((item) => <li>{item}</li>)}</ul></section>
+          <section id="criterios-compra"><h2>En qué deberías fijarte</h2><ul>{product.purchaseCriteria.map((item) => <li>{item}</li>)}</ul></section>
+          <section><h2>Por qué lo hemos seleccionado</h2><ul>{product.nexbyteCriteria.map((item) => <li>{item}</li>)}</ul></section>
+          <section><h2>Nuestra orientación</h2><p>{product.neutralRecommendation}</p></section>
+          <aside class="educational-note"><strong>Antes de elegir</strong><p>Las características pueden cambiar entre modelos. Usa esta guía para identificar lo que realmente necesitas y comprobar cada detalle antes de tomar una decisión.</p></aside>
+          <p><a class="btn btn-primary" href={product.guideUrl}>Aprende a elegir mejor</a></p>
+        </div>
+        <aside class="analysis-index surface" aria-label="Lo esencial">
+          <strong>Lo esencial</strong>
+          <dl><dt>Tipo de producto</dt><dd>{product.category}</dd><dt>Cómo se conecta</dt><dd>{product.connectivity}</dd><dt>Ideal para</dt><dd>{product.usageLabel}</dd></dl>
+          <a href={`/categorias/${product.categorySlug}`}>Descubre más opciones →</a>
+        </aside>
+      </div>
+
+      {related.length > 0 && <section class="related-section"><h2>También podría interesarte</h2><div class="related">{related.map((item, index) => <ProductCard product={item} index={index} />)}</div></section>}
+    </article>
+  </div>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+</BaseLayout>
+
+<style>
+  .analysis-hero{display:grid;grid-template-columns:minmax(300px,.95fr) 1.05fr;gap:38px;padding:32px}.analysis-hero>img{width:100%;height:100%;max-height:470px;object-fit:cover;border-radius:14px}.analysis-hero h1{margin:.15em 0;font-size:clamp(2rem,4vw,3.4rem);line-height:1.04}.analysis-hero div>p:not(.eyebrow){color:var(--color-text-muted);font-size:1.05rem}.analysis-layout{display:grid;grid-template-columns:minmax(0,850px) 280px;justify-content:center;gap:30px;margin-top:32px}.analysis-layout .prose{margin:0}.analysis-layout section{scroll-margin-top:170px}.analysis-index{position:sticky;top:155px;align-self:start;padding:22px}.analysis-index dl{display:grid;grid-template-columns:1fr;margin:14px 0}.analysis-index dt{margin-top:10px;font-size:.75rem;font-weight:800;color:var(--color-violet);text-transform:uppercase}.analysis-index dd{margin:2px 0}.analysis-index a{color:var(--color-violet);font-weight:750}.educational-note{margin:30px 0;padding:20px;border-left:4px solid var(--color-cyan);border-radius:10px;background:#eefaff}.educational-note p{margin-bottom:0}.related-section{margin-top:52px}.related{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  @media(max-width:900px){.analysis-hero,.analysis-layout{grid-template-columns:1fr}.analysis-index{position:static;grid-row:1}.related{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.analysis-hero{padding:16px}.related{grid-template-columns:1fr}}
+</style>

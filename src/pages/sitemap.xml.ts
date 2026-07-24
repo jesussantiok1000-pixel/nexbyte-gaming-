@@ -9,7 +9,7 @@ const staticRoutes = [
 ];
 
 export const GET: APIRoute = ({ site }) => {
-  const origin = site ?? new URL("https://nexbyte-gaming.netlify.app");
+  const origin = site ?? new URL("https://nexbytegaming.netlify.app");
   const routes = [
     ...staticRoutes,
     ...categories.map(({ slug }) => `/categorias/${slug}`),

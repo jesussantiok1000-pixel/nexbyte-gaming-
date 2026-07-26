@@ -1,0 +1,27 @@
+---
+const whatsappUrl =
+  "https://wa.me/51904481656?text=Hola%2C%20encontr%C3%A9%20NEXBYTE%20Gaming%20y%20quisiera%20realizar%20una%20consulta.";
+const isContactPage = Astro.url.pathname.replace(/\/+$/, "") === "/contacto";
+---
+
+{!isContactPage && (
+  <a class="whatsapp-float" href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Contactar con NEXBYTE por WhatsApp">
+    <svg aria-hidden="true" viewBox="0 0 32 32" width="25" height="25">
+      <path fill="currentColor" d="M16.02 4.67A11.2 11.2 0 0 0 6.3 21.43L4.7 27.3l6.01-1.58a11.2 11.2 0 1 0 5.31-21.05Zm0 20.5c-1.8 0-3.54-.52-5.04-1.5l-.36-.22-3.57.94.95-3.48-.24-.36a9.3 9.3 0 1 1 8.26 4.62Zm5.1-6.96c-.28-.14-1.65-.81-1.9-.9-.26-.1-.44-.14-.63.14-.19.28-.72.9-.88 1.09-.16.18-.33.2-.6.07-1.65-.83-2.74-1.48-3.84-3.35-.3-.5.3-.46.83-1.55.09-.19.05-.35-.02-.49-.07-.14-.63-1.52-.86-2.08-.23-.55-.46-.47-.63-.48h-.54c-.19 0-.49.07-.74.35-.26.28-.98.95-.98 2.32s1 2.7 1.13 2.88c.14.19 1.96 3 4.75 4.2.66.29 1.18.46 1.59.59.66.21 1.27.18 1.74.11.53-.08 1.65-.67 1.88-1.32.24-.65.24-1.2.17-1.32-.07-.12-.26-.19-.54-.33Z"/>
+    </svg>
+    <span>¿Necesitas ayuda?</span>
+  </a>
+)}
+
+<style>
+  .whatsapp-float{position:fixed;z-index:40;right:max(24px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom));min-width:48px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:11px 17px;border:1px solid rgb(255 255 255/.35);border-radius:999px;background:#168a52;color:#fff;box-shadow:0 8px 22px rgb(7 21 47/.2);font-size:.88rem;font-weight:800;animation:whatsapp-in 380ms var(--ease-out) both,whatsapp-heartbeat 2.5s 900ms ease-in-out infinite;transition:transform var(--motion-normal),filter var(--motion-normal),box-shadow var(--motion-normal)}
+  .whatsapp-float::before{content:"";position:absolute;z-index:-1;inset:-1px;border:2px solid rgb(37 211 102/.65);border-radius:inherit;opacity:0;animation:whatsapp-halo 2.5s 900ms ease-out infinite;pointer-events:none}
+  .whatsapp-float:hover{animation-play-state:paused;transform:translateY(-2px) scale(1.03);filter:brightness(1.08);box-shadow:0 11px 26px rgb(7 21 47/.26)}
+  .whatsapp-float:hover::before{animation-play-state:paused}
+  .whatsapp-float svg{flex:0 0 auto}
+  @keyframes whatsapp-in{from{opacity:0;transform:scale(.92)}}
+  @keyframes whatsapp-heartbeat{0%,58%,100%{transform:scale(1)} 64%{transform:scale(1.075)} 70%{transform:scale(1)} 76%{transform:scale(1.045)} 82%{transform:scale(1)}}
+  @keyframes whatsapp-halo{0%,58%{opacity:0;transform:scale(.92)} 64%{opacity:.5} 84%,100%{opacity:0;transform:scale(1.28)}}
+  @media(max-width:767px){.whatsapp-float{right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));width:52px;height:52px;padding:0}.whatsapp-float span{display:none}}
+  @media(prefers-reduced-motion:reduce){.whatsapp-float,.whatsapp-float::before{animation:none;transition:none}}
+</style>

@@ -14,10 +14,28 @@ const result = await productRepository.search({ category:category.slug });
 <BaseLayout title={`${category.seoTitle} | NEXBYTE`} description={category.seoDescription}>
   <div class="container page-shell">
     <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Categorías",href:"/categorias"},{label:category.name}]} />
-    <header class="page-hero surface"><p class="eyebrow">Tipo de producto</p><h1>{category.name}</h1><p>{category.description} Conoce los puntos que pueden marcar una diferencia y compara según tus necesidades.</p></header>
+    <header class="page-hero surface category-hero">
+      <img class="category-hero__image" src={category.coverImage} alt="" width="1536" height="1024" fetchpriority="high" decoding="async" />
+      <div class="category-hero__content">
+        <p class="eyebrow">Colección destacada</p>
+        <h1>{category.name}</h1>
+        <p>{category.description} Descubre opciones pensadas para rendimiento, comodidad y estilo.</p>
+      </div>
+    </header>
     <div class="catalog-toolbar"><p aria-live="polite"><strong>{result.total}</strong> resultados</p><label>Ordenar <select><option>Relevancia</option><option>Nombre</option></select></label></div>
     {result.items.length ? <section class="category-grid">{result.items.map((product,index) => <ProductCard product={product} index={index} />)}</section> : <section class="empty-state surface"><h2>Explora otras opciones</h2><p>Visita nuestras demás categorías para encontrar una alternativa que encaje contigo.</p><a class="btn btn-primary" href="/categorias">Ver otras categorías</a></section>}
-    <section class="info-card surface guide"><h2>Cómo elegir en {category.name.toLowerCase()}</h2><p>Define primero tu uso, compatibilidad y presupuesto. Después compara solo las características que cambian tu experiencia y contrasta documentación verificable.</p><a class="link-arrow" href="/metodologia">Consulta nuestra metodología →</a></section>
+    <section class="info-card surface guide"><h2>Encuentra tu próxima mejora</h2><p>Compara conectividad, comodidad, formato y compatibilidad para descubrir qué opción encaja mejor con tu setup.</p><a class="link-arrow" href="/guias">Descubre qué características importan →</a></section>
   </div>
 </BaseLayout>
-<style>.catalog-toolbar{display:flex;justify-content:space-between;align-items:center;margin:20px 0}.catalog-toolbar select{min-height:44px;border:1px solid var(--color-border);border-radius:10px;padding:0 12px;background:#fff}.category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.guide{margin-top:30px}@media(max-width:1100px){.category-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:800px){.category-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.category-grid{grid-template-columns:1fr}}</style>
+<style>
+  .category-hero{position:relative;isolation:isolate;min-height:340px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;background:#07152f;box-shadow:0 18px 42px rgb(22 35 71 / .16)}
+  .category-hero::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,rgb(5 13 34 / .96) 0%,rgb(8 23 58 / .84) 42%,rgb(8 23 58 / .22) 72%,transparent 100%)}
+  .category-hero__image{position:absolute;z-index:-2;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+  .category-hero__content{position:relative;z-index:1;width:100%}
+  .category-hero h1{max-width:720px}.category-hero__content>p:last-child{max-width:610px;color:#e3eafa;text-shadow:0 1px 12px rgb(4 15 41 / .45)}
+  .category-hero .eyebrow{color:#8eeaff}
+  .catalog-toolbar{display:flex;justify-content:space-between;align-items:center;margin:20px 0}.catalog-toolbar select{min-height:44px;border:1px solid var(--color-border);border-radius:10px;padding:0 12px;background:#fff}.category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.guide{margin-top:30px}
+  @media(max-width:1100px){.category-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:800px){.category-hero{min-height:300px}.category-hero__image{object-position:58% center}.category-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.category-hero{min-height:280px;padding:28px 24px}.category-hero::after{background:linear-gradient(90deg,rgb(5 13 34 / .96),rgb(8 23 58 / .72))}.category-hero__image{object-position:62% center}.category-grid{grid-template-columns:1fr}}
+</style>

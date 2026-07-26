@@ -1,10 +1,10 @@
 ---
-const links = [["Inicio", "/"], ["Selección NEXBYTE", "/seleccion"], ["Guías", "/guias"], ["Comparativas", "/comparativas"]];
+const links = [["Inicio", "/"], ["Nuestra selección", "/seleccion"], ["Guías", "/guias"], ["Comparativas", "/comparativas"]];
 const groups = [
-  ["Computación", [["Laptops gaming","laptops-gaming"],["Componentes","componentes"]]],
-  ["Periféricos", [["Teclados","teclados-mecanicos"],["Ratones","ratones-gaming"],["Accesorios","accesorios-gaming"]]],
-  ["Audio y video", [["Audio gaming","audio-gaming"],["Monitores","monitores-gaming"]]],
-  ["Setup", [["Setup gaming","setup-gaming"]]],
+  ["Computación", "/categorias#computacion", [["Laptops gaming","laptops-gaming"],["Componentes","componentes"]]],
+  ["Periféricos", "/categorias#perifericos", [["Teclados","teclados-mecanicos"],["Ratones","ratones-gaming"],["Accesorios","accesorios-gaming"]]],
+  ["Audio y video", "/categorias#audio-video", [["Audio gaming","audio-gaming"],["Monitores","monitores-gaming"]]],
+  ["Setup", "/categorias#setup", [["Setup gaming","setup-gaming"]]],
 ];
 const currentPath = Astro.url.pathname;
 const categoryActive = currentPath === "/categorias" || currentPath.startsWith("/categorias/");
@@ -15,8 +15,7 @@ const categoryActive = currentPath === "/categorias" || currentPath.startsWith("
     <div class="category-menu">
       <button class:list={{active:categoryActive}} type="button" data-mega-trigger aria-expanded="false" aria-controls="mega-menu" aria-current={categoryActive ? "page" : undefined}>Categorías <svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16"><path d="m5 7.5 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div id="mega-menu" class="mega surface" hidden>
-        {groups.map(([title, items]) => <section><h2>{title}</h2><ul>{(items as string[][]).map(([item,slug]) => <li><a class:list={{current:currentPath === `/categorias/${slug}`}} aria-current={currentPath === `/categorias/${slug}` ? "page" : undefined} href={`/categorias/${slug}`}>{item}</a></li>)}</ul></section>)}
-        <div class="mega-actions"><a href="/categorias">Ver todas las categorías <span aria-hidden="true">→</span></a><a href="/seleccion">Explorar selección NEXBYTE <span aria-hidden="true">→</span></a></div>
+        {groups.map(([title, href, items]) => <section><h2><a class="mega-title" href={href as string}>{title}</a></h2><ul>{(items as string[][]).map(([item,slug]) => <li><a class:list={{current:currentPath === `/categorias/${slug}`}} aria-current={currentPath === `/categorias/${slug}` ? "page" : undefined} href={`/categorias/${slug}`}>{item}</a></li>)}</ul></section>)}
       </div>
     </div>
     {links.slice(1).map(([label, href]) => <a class:list={{active:currentPath === href || currentPath.startsWith(`${href}/`)}} aria-current={currentPath === href || currentPath.startsWith(`${href}/`) ? "page" : undefined} href={href}>{label}</a>)}
@@ -28,21 +27,23 @@ const categoryActive = currentPath === "/categorias" || currentPath.startsWith("
   .nav-inner { min-height: 48px; display: flex; align-items: stretch; justify-content: center; gap: clamp(12px, 2.1vw, 32px); }
   .primary-nav a, .primary-nav button { position: relative; display: inline-flex; align-items: center; gap:6px; border: 0; border-radius:10px; background: transparent; min-height: 48px; padding: 0 10px; color: #34405a; font-size: .88rem; font-weight: 650; cursor: pointer; white-space: nowrap; transition:color 180ms ease,background 180ms ease,transform 180ms var(--ease-smooth),box-shadow 180ms ease; }
   .nav-inner>a:hover,.nav-inner>a:focus-visible,.category-menu>button:hover,.category-menu>button:focus-visible{color:var(--color-violet);background:linear-gradient(120deg,rgb(67 204 236 / .11),rgb(109 58 232 / .1));transform:translateY(-2px) scale(1.035);box-shadow:0 7px 18px rgb(63 76 119 / .09)}
-  .nav-inner>a::after,.category-menu>button::after{content:"";position:absolute;inset:auto 0 0;height:2px;background:var(--color-violet);transform:scaleX(0);transform-origin:center;transition:transform 240ms var(--ease-smooth)}.nav-inner>a:hover::after,.nav-inner>a:focus-visible::after,.category-menu>button:hover::after,.category-menu>button:focus-visible::after,.primary-nav .active::after{transform:scaleX(1)}
+  .nav-inner>a::after,.category-menu>button::after{content:"";position:absolute;inset:auto 0 0;height:2px;background:linear-gradient(90deg,var(--color-violet),#9b5de5 55%,var(--color-cyan),var(--color-violet));background-size:220% 100%;transform:scaleX(0);transform-origin:left center;transition:transform 480ms var(--ease-smooth);box-shadow:0 0 7px rgb(109 58 232 / .38)}.nav-inner>a:hover::after,.nav-inner>a:focus-visible::after,.nav-inner>a:active::after,.category-menu>button:hover::after,.category-menu>button:focus-visible::after,.category-menu>button:active::after,.primary-nav .active::after{transform:scaleX(1);animation:nav-charge-glow 900ms linear infinite}
   .category-menu { position: relative; display: flex; }
   .category-menu button svg{transition:transform 180ms var(--ease-standard)}.category-menu button[aria-expanded="true"] svg{transform:rotate(180deg)}
-  .mega { position: absolute; z-index: 30; top: calc(100% + 9px); left: -95px; width: min(850px, calc(100vw - 48px)); padding: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 26px; transform-origin: top; animation: mega-in 240ms var(--ease-smooth); }
+  .mega { position:absolute;z-index:30;top:calc(100% + 9px);left:-80px;width:min(760px,calc(100vw - 48px));padding:24px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;transform-origin:top;animation:mega-in 240ms var(--ease-smooth); }
   .mega[hidden] { display:none; }
   .mega h2 { margin:0 0 9px; font-size:.9rem; }
+  .mega h2 .mega-title{position:relative;display:inline-flex;width:auto;min-height:32px;padding:4px 8px;color:var(--color-violet);font-weight:750;transition:color 180ms ease}
+  .mega h2 .mega-title::after{content:"";position:absolute;right:8px;bottom:1px;left:8px;height:2px;border-radius:999px;background:linear-gradient(90deg,var(--color-violet),#9b5de5 52%,var(--color-cyan),var(--color-violet));background-size:220% 100%;transform:scaleX(0);transform-origin:left center;transition:transform 520ms var(--ease-smooth);box-shadow:0 0 7px rgb(109 58 232 / .35)}
+  .mega h2 .mega-title:hover,.mega h2 .mega-title:focus-visible,.mega h2 .mega-title:active{color:var(--color-violet);background:transparent;box-shadow:none;transform:none}
+  .mega h2 .mega-title:hover::after,.mega h2 .mega-title:focus-visible::after,.mega h2 .mega-title:active::after{transform:scaleX(1);animation:nav-charge-glow 900ms linear infinite}
   .mega ul { list-style:none; margin:0; padding:0; }
   .mega li a { width:100%; min-height:35px; margin:2px 0; padding:6px 9px; color:var(--color-text-muted); font-weight:500; }
   .mega li a:hover,.mega li a:focus-visible{color:#5524c9;background:linear-gradient(110deg,rgb(67 204 236 / .14),rgb(141 104 255 / .16));transform:translateX(3px) scale(1.035);box-shadow:0 7px 16px rgb(72 47 138 / .1)}
   .mega li a.current { color:var(--color-violet);font-weight:700; }
-  .mega section{animation:mega-column 240ms var(--ease-smooth) both}.mega section:nth-child(2){animation-delay:45ms}.mega section:nth-child(3){animation-delay:90ms}.mega section:nth-child(4){animation-delay:135ms}
-  .mega-actions { grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid var(--color-border);padding-top:16px; }
-  .mega-actions a { border-radius:12px;padding:12px 16px;background:var(--color-surface-soft);color:var(--color-violet);justify-content:space-between; }
-  .mega-actions a:hover,.mega-actions a:focus-visible{color:#fff;background:linear-gradient(115deg,#43ccec,#6d3ae8 58%,#9b5de5);transform:translateY(-2px) scale(1.02);box-shadow:0 12px 24px rgb(109 58 232 / .22)}
+  .mega section{min-width:0;animation:mega-column 240ms var(--ease-smooth) both}.mega section:nth-child(2){animation-delay:45ms}.mega section:nth-child(3){animation-delay:90ms}.mega section:nth-child(4){animation-delay:135ms}
   @keyframes mega-in { from { opacity:0; transform:translateY(12px) scale(.98); } }@keyframes mega-column{from{opacity:0;transform:translateY(8px)}}
+  @keyframes nav-charge-glow{to{background-position:-220% 0}}
   @media(max-width:1023px) { .primary-nav { display:none; } }
-  @media(prefers-reduced-motion:reduce){.primary-nav a,.primary-nav button{transition:none}.nav-inner>a:hover,.nav-inner>a:focus-visible,.category-menu>button:hover,.category-menu>button:focus-visible,.mega li a:hover,.mega li a:focus-visible,.mega-actions a:hover,.mega-actions a:focus-visible{transform:none}}
+  @media(prefers-reduced-motion:reduce){.primary-nav a,.primary-nav button{transition:none}.nav-inner>a::after,.category-menu>button::after,.mega h2 .mega-title::after{transition:none;animation:none!important}.nav-inner>a:hover,.nav-inner>a:focus-visible,.category-menu>button:hover,.category-menu>button:focus-visible,.mega li a:hover,.mega li a:focus-visible{transform:none}}
 </style>

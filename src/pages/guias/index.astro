@@ -1,4 +1,30 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro"; import Breadcrumbs from "../../components/global/Breadcrumbs.astro"; import EditorialHero from "../../components/content/EditorialHero.astro"; import { guides } from "../../data/editorial";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/global/Breadcrumbs.astro";
+import EditorialHero from "../../components/content/EditorialHero.astro";
+import { guides } from "../../data/editorial";
 ---
-<BaseLayout title="Guías para elegir tecnología gaming | NEXBYTE" description="Guías de compra, configuración y ergonomía para tecnología gaming."><div class="container page-shell"><Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Guías"}]}/><EditorialHero image="guia" eyebrow="Aprende antes de elegir" title="Guías para elegir tecnología gaming" description="Contenido educativo para entender especificaciones y tomar decisiones con contexto." /><section class="content-grid">{guides.map(guide=><article class="info-card surface"><p class="eyebrow">{guide.category}</p><h2>{guide.title}</h2><p>{guide.description}</p><a class="link-arrow" href={`/guias/${guide.slug}`}>Leer guía →</a></article>)}</section></div></BaseLayout>
+<BaseLayout
+  title="Guías para elegir tecnología | NEXBYTE"
+  description="Descubre las características clave para elegir productos de gaming, estudio, productividad y setup."
+>
+  <div class="container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Guías"}]}/>
+    <EditorialHero
+      image="guia"
+      eyebrow="Elige con confianza"
+      title="Descubre qué características importan"
+      description="Encuentra recomendaciones prácticas para comparar equipos y elegir opciones que encajen con tu setup."
+    />
+    <section class="content-grid">
+      {guides.map(guide =>
+        <article class="info-card surface">
+          <p class="eyebrow">{guide.category}</p>
+          <h2>{guide.title}</h2>
+          <p>{guide.description}</p>
+          <a class="link-arrow" href={`/guias/${guide.slug}`}>Explorar la guía →</a>
+        </article>
+      )}
+    </section>
+  </div>
+</BaseLayout>

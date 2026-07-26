@@ -8,7 +8,7 @@ import { categories } from "../../data/categories";
     <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Categorías"}]} />
     <header class="page-hero surface categories-hero"><h1>Explora tecnología gaming por categoría</h1><p>Empieza por el tipo de equipo que necesitas y encuentra criterios claros para comparar opciones.</p></header>
     <section class="content-grid" aria-label="Categorías">
-      {categories.map(category => <article class="info-card surface"><img src={category.coverImage} alt={`Imagen de ${category.name}`} width="480" height="300" loading="lazy" decoding="async" /><span aria-hidden="true">{category.icon}</span><h2>{category.name}</h2><p>{category.description}</p><a class="link-arrow" href={`/categorias/${category.slug}`}>Explorar categoría →</a></article>)}
+      {categories.map(category => <article id={category.slug === "laptops-gaming" ? "computacion" : category.slug === "teclados-mecanicos" ? "perifericos" : category.slug === "audio-gaming" ? "audio-video" : category.slug === "setup-gaming" ? "setup" : undefined} class="info-card surface"><img src={category.coverImage} alt={`Imagen de ${category.name}`} width="480" height="300" loading="lazy" decoding="async" /><span aria-hidden="true">{category.icon}</span><h2>{category.name}</h2><p>{category.description}</p><a class="link-arrow" href={`/categorias/${category.slug}`}>Explorar categoría →</a></article>)}
     </section>
     <aside class="info-card surface start"><h2>¿No sabes por dónde empezar?</h2><p>Consulta nuestra selección editorial o aprende cómo evaluamos cada opción.</p><a class="btn btn-primary" href="/seleccion">Ver selección NEXBYTE</a> <a class="btn btn-secondary" href="/metodologia">Conocer metodología</a></aside>
   </div>

@@ -17,6 +17,7 @@ const revealGroups = [
   { container: ".related", items: ":scope > *" },
   { container: ".comparison-table", items: ":scope > *" },
   { container: ".saved-grid", items: ":scope > *" },
+  { container: "main", items: ":scope > section, :scope > article, :scope > aside, :scope > form, :scope > div" },
 ];
 
 if (!reduceMotion.matches && "IntersectionObserver" in window) {
@@ -44,12 +45,17 @@ if (!reduceMotion.matches && "IntersectionObserver" in window) {
     });
   });
 
-  document.querySelectorAll<HTMLElement>(".header-main > *, .nav-inner > *").forEach((item, index) => {
+  document.querySelectorAll<HTMLElement>(
+    ".header-main > *, .nav-inner > *, .mobile-menu nav > *, .breadcrumbs > *, .page-hero > *, .editorial-hero__copy > *"
+  ).forEach((item, index) => {
     item.dataset.pageEnter = "";
     item.style.setProperty("--enter-index", String(Math.min(index, 6)));
   });
 
   document.documentElement.classList.add("motion-ready");
+  // Force the hidden starting state to be painted before revealing elements.
+  // Without this layout read, fast desktop browsers can batch both states.
+  void document.documentElement.offsetHeight;
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -71,12 +77,10 @@ if (!reduceMotion.matches && "IntersectionObserver" in window) {
     });
   }, { rootMargin:"0px 0px -7% 0px", threshold:.08 });
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      revealElements.forEach((item) => observer.observe(item));
-      document.querySelectorAll<HTMLElement>("[data-page-enter]").forEach((item) => item.classList.add("is-visible"));
-    });
-  });
+  window.setTimeout(() => {
+    revealElements.forEach((item) => observer.observe(item));
+    document.querySelectorAll<HTMLElement>("[data-page-enter]").forEach((item) => item.classList.add("is-visible"));
+  }, 80);
 }
 
 document.addEventListener("pointerdown", (event) => {

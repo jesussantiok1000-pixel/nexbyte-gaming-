@@ -50,7 +50,7 @@ export const products: Product[] = [
   {
     ...shared,
     slug: "laptop-gaming-equilibrada",
-    title: "Una laptop preparada para jugar y crear",
+    title: "Laptop gaming equilibrada",
     analysisTitle: "El equilibrio que buscas para jugar y crear",
     shortDescription: "Un punto de partida equilibrado para quienes buscan rendimiento, movilidad y una experiencia fluida.",
     orientationText: "Pensada para jugar, estudiar y crear contenido.",
@@ -72,7 +72,7 @@ export const products: Product[] = [
   {
     ...shared,
     slug: "teclado-mecanico-tkl",
-    title: "Teclado mecánico TKL",
+    title: "Teclado mecánico compacto TKL",
     analysisTitle: "Más espacio, precisión y una respuesta a tu ritmo",
     shortDescription: "Formato compacto sin bloque numérico que libera espacio para el ratón y conserva las teclas de función.",
     orientationText: "Pensado para ganar espacio sin renunciar a las teclas esenciales.",
@@ -116,7 +116,7 @@ export const products: Product[] = [
   {
     ...shared,
     slug: "auriculares-gaming",
-    title: "Auriculares gaming cómodos",
+    title: "Auriculares gaming con micrófono",
     analysisTitle: "Comodidad y claridad para sesiones más largas",
     shortDescription: "Comodidad, micrófono y conexión son más importantes que las promesas de sonido espectacular.",
     orientationText: "Pensados para jugar, conversar y disfrutar durante más tiempo.",
@@ -138,7 +138,7 @@ export const products: Product[] = [
   {
     ...shared,
     slug: "monitor-gaming",
-    title: "Monitor gaming fluido",
+    title: "Monitor gaming de alta frecuencia",
     analysisTitle: "Una imagen más fluida cambia la experiencia",
     shortDescription: "Frecuencia, resolución, panel y ergonomía deben guardar relación con el equipo y la distancia de uso.",
     orientationText: "Pensado para disfrutar movimientos más claros y un espacio de trabajo cómodo.",

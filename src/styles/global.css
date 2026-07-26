@@ -34,6 +34,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 button { color: inherit; }
+h1, h2, h3 { font-weight: 800; }
 
 :focus-visible { outline: 3px solid var(--color-cyan); outline-offset: 3px; }
 .skip-link { position: fixed; z-index: 999; top: 8px; left: 8px; transform: translateY(-160%); border-radius: 10px; background: #fff; padding: 12px 18px; font-weight: 800; }
@@ -54,7 +55,7 @@ button { color: inherit; }
 .breadcrumbs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; color:var(--color-text-muted); font-size:.82rem; }
 .breadcrumbs a:hover { color:var(--color-violet); }
 .page-hero { padding:clamp(28px,5vw,58px); margin-bottom:28px; background:linear-gradient(135deg,#07152f,#182858); color:#fff; }
-.page-hero h1 { max-width:900px; margin:0 0 12px; font-size:clamp(2rem,5vw,3.6rem); line-height:1.05; letter-spacing:-.045em; }
+.page-hero h1 { max-width:900px; margin:0 0 12px; color:#fff; font-size:clamp(2rem,5vw,3.6rem); line-height:1.05; letter-spacing:-.045em; }
 .page-hero p { max-width:760px; margin:0; color:#cbd5e6; }
 .content-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
 .info-card { padding:24px; }
@@ -62,10 +63,13 @@ button { color: inherit; }
 .info-card p { color:var(--color-text-muted); }
 .link-arrow { color:var(--color-violet); font-weight:750; }
 .prose { max-width:850px; margin-inline:auto; }
-.prose h2 { margin-top:2.4rem; }
+.prose h2 { margin-top:2.4rem; font-size:1.05rem; line-height:1.35; }
 .prose p,.prose li { color:#46536d; }
 .empty-state { padding:48px 24px; text-align:center; }
 @media(max-width:900px){.content-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.content-grid{grid-template-columns:1fr}.page-shell{padding-top:20px}.page-hero{border-radius:14px}}
 
 @media (max-width: 767px) { .container { width: min(100% - 32px, var(--container)); } }
+
+/* Radio visual uniforme solicitado para todo el sitio. */
+*, *::before, *::after { border-radius: 5px !important; }

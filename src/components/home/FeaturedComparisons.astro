@@ -8,13 +8,13 @@ const visuals = [
 ---
 <section class="comparisons container" aria-labelledby="comparativas-destacadas">
   <div class="comparison-heading">
-    <div><p class="eyebrow">Diferencias con contexto</p><h2 id="comparativas-destacadas" class="section-heading">Comparativas para decidir mejor</h2></div>
+    <div><p class="eyebrow">COMPARA ANTES DE ELEGIR</p><h2 id="comparativas-destacadas" class="section-heading">Encuentra la opción que encaja contigo</h2></div>
     <a href="/comparativas">Ver todas las comparativas <span aria-hidden="true">→</span></a>
   </div>
   <div class="comparison-grid">
     {comparisons.slice(0,3).map((item,index)=><article class="comparison-card surface">
       <a class="comparison-visual" href={`/comparativas/${item.slug}`} aria-label={`Leer ${item.title}`}><img src={visuals[index].src} alt={visuals[index].alt} width="420" height="210" loading="lazy" decoding="async" /></a>
-      <div><p>{item.category}</p><h3>{item.title}</h3><span>{item.description}</span><small>Actualizado el 23 de julio de 2026</small><a href={`/comparativas/${item.slug}`}>Leer comparativa <b aria-hidden="true">→</b></a></div>
+      <div><p>{item.category}</p><h3>{item.title}</h3><span>{item.description}</span><a href={`/comparativas/${item.slug}`}>Comparar opciones <b aria-hidden="true">→</b></a></div>
     </article>)}
   </div>
 </section>

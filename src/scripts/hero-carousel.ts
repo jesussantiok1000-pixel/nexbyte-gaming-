@@ -14,15 +14,13 @@ if (carousel) {
   const stop=()=>{clearTimeout(timeout);timeout=0;};
   const schedule=()=>{
     stop();
-    const canPlay=!reduceMotion.matches&&!pausedByUser&&!document.hidden;
+    const canPlay=!pausedByUser&&!document.hidden&&slides.length>1;
     if(canPlay)timeout=window.setTimeout(()=>change(index+1),duration);
   };
-  const activate=(next:number)=>{
-    index=(next+slides.length)%slides.length;
+  const renderState=()=>{
     slides.forEach((slide,slideIndex)=>{
       const active=slideIndex===index;
       slide.classList.toggle("is-active",active);
-      slide.classList.remove("is-leaving");
       slide.setAttribute("aria-hidden",String(!active));
       slide.inert=!active;
     });
@@ -31,14 +29,21 @@ if (carousel) {
       dot.classList.toggle("active",active);
       active?dot.setAttribute("aria-current","true"):dot.removeAttribute("aria-current");
     });
-    transitioning=false;
-    schedule();
   };
   const change=(next:number)=>{
-    if(transitioning||next===index)return;
+    const nextIndex=(next+slides.length)%slides.length;
+    if(transitioning||nextIndex===index)return;
     transitioning=true;
-    slides[index]?.classList.add("is-leaving");
-    window.setTimeout(()=>activate(next),reduceMotion.matches?0:180);
+    const outgoing=slides[index];
+    outgoing?.classList.remove("is-active");
+    outgoing?.classList.add("is-leaving");
+    index=nextIndex;
+    renderState();
+    window.setTimeout(()=>{
+      outgoing?.classList.remove("is-leaving");
+      transitioning=false;
+      schedule();
+    },reduceMotion.matches?20:820);
   };
   const manual=(next:number)=>{stop();if(next===index)schedule();else change(next);};
 

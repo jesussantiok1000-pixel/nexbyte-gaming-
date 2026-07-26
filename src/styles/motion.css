@@ -41,7 +41,7 @@ html.js.motion-ready [data-page-enter] {
 html.js.motion-ready [data-page-enter].is-visible {
   opacity:1;
   transform:translate3d(0,0,0);
-  transition:opacity 480ms var(--ease-smooth),transform 540ms var(--ease-smooth);
+  transition:opacity 560ms var(--ease-smooth),transform 640ms var(--ease-smooth);
   transition-delay:calc(var(--enter-index,0) * 55ms);
 }
 

@@ -1,0 +1,33 @@
+<div class="page-back container">
+  <a class="page-back__button" href="/" data-page-back aria-label="Volver a la página anterior">
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="19" height="19">
+      <path d="m14.5 6-6 6 6 6M9 12h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Volver</span>
+  </a>
+</div>
+
+<script>
+  const backButton = document.querySelector<HTMLAnchorElement>("[data-page-back]");
+  backButton?.addEventListener("click", (event) => {
+    if (!document.referrer) return;
+    try {
+      const previousPage = new URL(document.referrer);
+      if (previousPage.origin !== window.location.origin) return;
+      event.preventDefault();
+      window.history.back();
+    } catch {
+      // El enlace a Inicio permanece como alternativa segura.
+    }
+  });
+</script>
+
+<style>
+  .page-back{display:flex;justify-content:flex-start;padding-block:28px 42px}
+  .page-back__button{min-height:42px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--color-border);border-radius:5px;background:#fff;color:var(--color-text);font-size:.84rem;font-weight:750;box-shadow:0 7px 18px rgb(7 21 47/.07);transition:color 200ms,border-color 200ms,background 200ms,transform 240ms var(--ease-smooth),box-shadow 240ms var(--ease-smooth)}
+  .page-back__button:hover,.page-back__button:focus-visible{color:var(--color-violet);border-color:rgb(109 58 232/.48);background:#faf8ff;transform:translateX(-3px);box-shadow:0 10px 22px rgb(43 28 90/.1)}
+  .page-back__button svg{flex:0 0 auto;transition:transform 240ms var(--ease-smooth)}
+  .page-back__button:hover svg,.page-back__button:focus-visible svg{transform:translateX(-3px)}
+  @media(max-width:767px){.page-back{padding-block:22px 32px}.page-back__button{min-height:40px;padding:8px 14px}}
+  @media(prefers-reduced-motion:reduce){.page-back__button,.page-back__button svg{transition:none}}
+</style>

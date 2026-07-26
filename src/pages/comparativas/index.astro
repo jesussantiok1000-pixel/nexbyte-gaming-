@@ -1,4 +1,30 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro"; import Breadcrumbs from "../../components/global/Breadcrumbs.astro"; import EditorialHero from "../../components/content/EditorialHero.astro"; import { comparisons } from "../../data/editorial";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/global/Breadcrumbs.astro";
+import EditorialHero from "../../components/content/EditorialHero.astro";
+import { comparisons } from "../../data/editorial";
 ---
-<BaseLayout title="Comparativas de tecnología gaming | NEXBYTE" description="Comparativas editoriales con criterios claros."><div class="container page-shell"><Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Comparativas"}]}/><EditorialHero image="comparativa" eyebrow="Decide con contexto" title="Comparativas de tecnología gaming" description="Diferencias importantes explicadas según el uso, sin declarar ganadores universales." /><section class="content-grid">{comparisons.map(item=><article class="info-card surface"><p class="eyebrow">{item.category}</p><h2>{item.title}</h2><p>{item.description}</p><a class="link-arrow" href={`/comparativas/${item.slug}`}>Ver comparativa →</a></article>)}</section></div></BaseLayout>
+<BaseLayout
+  title="Comparativas de tecnología | NEXBYTE"
+  description="Compara características, formatos y beneficios para encontrar la tecnología adecuada para tu setup."
+>
+  <div class="container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Comparativas"}]}/>
+    <EditorialHero
+      image="comparativa"
+      eyebrow="Compara tus opciones"
+      title="Encuentra el formato que mejor encaja contigo"
+      description="Contrasta características, comodidad y rendimiento para elegir con mayor confianza."
+    />
+    <section class="content-grid">
+      {comparisons.map(item =>
+        <article class="info-card surface">
+          <p class="eyebrow">{item.category}</p>
+          <h2>{item.title}</h2>
+          <p>{item.description}</p>
+          <a class="link-arrow" href={`/comparativas/${item.slug}`}>Comparar opciones →</a>
+        </article>
+      )}
+    </section>
+  </div>
+</BaseLayout>

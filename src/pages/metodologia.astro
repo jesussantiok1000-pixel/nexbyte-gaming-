@@ -1,12 +1,39 @@
 ---
 import StaticPage from "../components/content/StaticPage.astro";
-const sections=[
-{title:"Cómo te ayudamos a elegir",text:"En NEXBYTE analizamos tipos de productos, características y necesidades de uso para ayudarte a entender qué conviene revisar antes de elegir. Las imágenes apoyan visualmente cada categoría y los detalles pueden variar entre modelos. Por eso recomendamos comprobar siempre las especificaciones finales del producto que estés considerando."},
-{title:"Qué analizamos",text:"Partimos del uso recomendado, compatibilidad, conectividad, ergonomía y especificaciones que pueden verificarse."},
-{title:"Qué significa Selección NEXBYTE",text:"Es una curación editorial pequeña. Indica que una opción cumple criterios claros; no significa que sea la mejor para todas las personas."},
-{title:"Límites de la información",text:"Solo describimos experiencias y datos que pueden respaldarse. Los precios, valoraciones y la disponibilidad no forman parte del contenido actual, y una especificación nunca se presenta como una promesa de rendimiento."},
-{title:"Fuentes fiables",text:"Contrastamos documentación del fabricante, manuales, estándares técnicos y publicaciones especializadas identificables. Diferenciamos especificaciones verificables de afirmaciones promocionales."},
-{title:"Cómo actualizamos",text:"Revisamos el contenido editorial y señalamos su fecha. Las recomendaciones pueden cambiar cuando se integren productos reales o aparezca información nueva."},
-{title:"Independencia y correcciones",text:"Las selecciones no son rankings automáticos y actualmente no contienen enlaces comerciales. Puedes comunicar una corrección desde contacto."}];
+
+const sections = [
+  {
+    title: "Selecciones para distintos usos",
+    text: "Organizamos productos para gaming, estudio, productividad y entretenimiento, facilitando que encuentres opciones acordes con tu espacio y tus prioridades."
+  },
+  {
+    title: "Características que importan",
+    text: "Consideramos conectividad, formato, precisión, comodidad, compatibilidad y rendimiento según cada tipo de producto."
+  },
+  {
+    title: "Una colección más fácil de explorar",
+    text: "Agrupamos alternativas con beneficios claros para que puedas comparar necesidades, características y formas de uso con rapidez."
+  },
+  {
+    title: "Rendimiento y compatibilidad",
+    text: "Destacamos las especificaciones que ayudan a identificar si un equipo encaja con tus dispositivos, actividades y expectativas."
+  },
+  {
+    title: "Información de referencia",
+    text: "Consultamos documentación técnica, manuales, estándares y fuentes especializadas para presentar características comprensibles."
+  },
+  {
+    title: "Colecciones que evolucionan",
+    text: "Revisamos las categorías y recomendaciones para incorporar nuevas formas de jugar, trabajar, estudiar y mejorar el setup."
+  },
+  {
+    title: "Sugerencias y correcciones",
+    text: "Si detectas información que podamos mejorar, puedes compartirla desde nuestra página de contacto."
+  }
+];
 ---
-<StaticPage title="Cómo seleccionamos" description="La metodología editorial que guía las selecciones y comparativas de NEXBYTE." sections={sections}/>
+<StaticPage
+  title="Cómo seleccionamos"
+  description="Conoce las características que consideramos para reunir productos y colecciones en NEXBYTE."
+  sections={sections}
+/>

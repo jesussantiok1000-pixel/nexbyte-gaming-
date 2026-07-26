@@ -1,10 +1,15 @@
 ---
 import StaticPage from "../components/content/StaticPage.astro";
+import SocialLinks from "../components/global/SocialLinks.astro";
 const sections=[
-  {title:"Qué es NEXBYTE",text:"NEXBYTE es un catálogo tecnológico en español para descubrir equipos, periféricos y accesorios orientados a gaming, estudio, productividad y setup."},
+  {title:"Qué es NEXBYTE",text:"NEXBYTE es un catálogo editorial tecnológico en español para descubrir equipos, periféricos y accesorios orientados a gaming, estudio, productividad y setup."},
   {title:"Encuentra lo que encaja contigo",text:"Organizamos productos por categoría, uso y características para ayudarte a explorar opciones con mayor facilidad."},
-  {title:"Selección con criterio",text:"Destacamos aspectos como rendimiento, comodidad, formato, conectividad y compatibilidad sin atribuir datos comerciales que no estén confirmados."},
-  {title:"Apoyo antes de elegir",text:"Las guías y comparativas complementan el catálogo para que puedas reconocer qué características importan en tu próxima mejora."},
+  {title:"Selección con criterio",text:"Destacamos aspectos como formato, conectividad, compatibilidad y uso previsto sin atribuir datos comerciales o mediciones que no estén confirmados.",links:[{label:"Cómo seleccionamos productos",href:"/como-seleccionamos-productos"},{label:"Metodología",href:"/metodologia"}]},
+  {title:"Análisis documental y pruebas",text:"Las fichas actuales se basan en especificaciones verificables y comparación editorial. No afirmamos que un producto fue probado físicamente cuando no existe evidencia de ello.",links:[{label:"Política editorial",href:"/politica-editorial"}]},
+  {title:"Afiliación y compra externa",text:"Algunos productos incluyen enlaces externos identificados. NEXBYTE no procesa pagos, disponibilidad ni envíos; esas condiciones se consultan con el proveedor.",links:[{label:"Afiliación y transparencia",href:"/afiliados"}]},
+  {title:"Autoría, contacto y correcciones",text:"Jesús Manuel es el responsable editorial. Puedes consultar su perfil o comunicar información que deba revisarse.",links:[{label:"Perfil del autor",href:"/autor/jesus-manuel"},{label:"Contacto",href:"/contacto"},{label:"Política de correcciones",href:"/politica-de-correcciones"}]},
 ];
 ---
-<StaticPage title="Sobre NEXBYTE" description="Conoce cómo NEXBYTE te ayuda a descubrir tecnología para gaming, estudio y productividad." sections={sections}/>
+<StaticPage title="Sobre NEXBYTE" description="Conoce cómo NEXBYTE te ayuda a descubrir tecnología para gaming, estudio y productividad." sections={sections}>
+  <section><h2>Síguenos</h2><p>Los perfiles oficiales aparecerán aquí cuando estén configurados.</p><SocialLinks location="about_page" showLabels /></section>
+</StaticPage>

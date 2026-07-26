@@ -6,7 +6,7 @@ const affiliateUrl = getValidAffiliateUrl(product.affiliateUrl);
 ---
 <article class="product-card surface" data-product data-category={product.category} data-connectivity={product.connectivity} data-usage={product.usage.join("|")} data-filters={(product.filters ?? []).join("|")} data-slug={product.slug} data-title={product.title}>
   <div class="product-image product-card__image">
-    <a href={product.analysisUrl} aria-label={`Conoce sus puntos clave: ${product.title}`}>
+    <a href={product.analysisUrl} aria-label={`Ver análisis y detalles de ${product.title}`}>
       <picture>
         <img src={product.image} alt={product.imageAlt} width="1536" height="1024" loading={index < 4 ? "eager" : "lazy"} />
       </picture>
@@ -18,9 +18,9 @@ const affiliateUrl = getValidAffiliateUrl(product.affiliateUrl);
   <ul class="product-tags" aria-label="Características destacadas">{product.features.slice(0,2).map(feature=><li>{feature}</li>)}</ul>
   <p class="benefit">{product.orientationText}</p>
   <div class="card-actions">
-    <a class="btn btn-secondary" href={product.analysisUrl}>Ver detalles</a>
+    <a class="btn btn-secondary" href={product.analysisUrl} aria-label={`Ver detalles de ${product.title}`}>Ver detalles</a>
     {affiliateUrl
-      ? <a class="btn amazon-button" href={affiliateUrl} target="_blank" rel="sponsored noopener noreferrer" aria-label={`Ver ${product.title} en Amazon (abre en una pestaña nueva)`}>
+      ? <a class="btn amazon-button" href={affiliateUrl} target="_blank" rel="sponsored nofollow noopener noreferrer" aria-label={`Ver ${product.title} en Amazon (abre en una pestaña nueva)`}>
           <span class="amazon-mark" aria-hidden="true"><b>a</b><svg viewBox="0 0 22 8"><path d="M2 2.5c4.8 3.6 11.2 3.7 16.5.3M16.7 1.5l2.5.8-.8 2.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <span>Ver en Amazon</span><span class="external-arrow" aria-hidden="true">↗</span>
         </a>

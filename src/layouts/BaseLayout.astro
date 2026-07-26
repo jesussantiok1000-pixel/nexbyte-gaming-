@@ -5,6 +5,7 @@ import SiteHeader from "../components/global/SiteHeader.astro";
 import SiteFooter from "../components/global/SiteFooter.astro";
 import BackButton from "../components/global/BackButton.astro";
 import ToastRegion from "../components/ui/ToastRegion.astro";
+import { configuredSocialProfiles, siteConfig } from "../config/site";
 
 interface Props {
   title?: string;
@@ -15,25 +16,28 @@ interface Props {
 
 const {
   title = "NEXBYTE | Tecnología gaming, comparativas y recomendaciones",
-  description = "Descubre productos gaming, comparativas claras y guías para elegir laptops, periféricos y accesorios para tu setup.",
+  description = siteConfig.description,
   noindex = false,
-  image = "/images/image-2.png",
+  image = siteConfig.ogImage,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const canonical = new URL(Astro.url.pathname, siteConfig.url);
 const showBackButton = Astro.url.pathname !== "/";
 const socialImage = new URL(image, canonical.origin);
 const organization = {
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "Organization", name: "NEXBYTE", url: canonical.origin },
+    { "@type": "Organization", name:siteConfig.name, alternateName:siteConfig.alternateName, url:siteConfig.url, logo:new URL(siteConfig.squareLogo,siteConfig.url).href, description:siteConfig.description, ...(siteConfig.contact.email?{email:siteConfig.contact.email}:{}), sameAs:configuredSocialProfiles.map(([,url])=>url) },
     {
       "@type": "WebSite",
-      name: "NEXBYTE",
-      url: canonical.origin,
+      name: siteConfig.name,
+      alternateName:siteConfig.alternateName,
+      url: siteConfig.url,
+      publisher:{"@type":"Organization",name:siteConfig.name,url:siteConfig.url},
+      inLanguage:siteConfig.language,
       potentialAction: {
         "@type": "SearchAction",
-        target: `${canonical.origin}/buscar?q={search_term_string}`,
+        target: `${siteConfig.url}/buscar?q={search_term_string}`,
         "query-input": "required name=search_term_string",
       },
     },
@@ -48,20 +52,27 @@ const organization = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
-    <meta name="theme-color" content="#07152f" />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large"} />
+    <meta name="theme-color" content={siteConfig.themeColor} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:locale" content={siteConfig.locale} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:alt" content={title} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={title} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(organization)} />
     <title>{title}</title>
   </head>

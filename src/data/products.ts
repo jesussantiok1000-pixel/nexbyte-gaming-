@@ -55,6 +55,18 @@ export interface Product {
   relatedProductIds?: string[];
   officialImageUrl?: string;
   affiliateEnabled: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  editorialSummary?: string;
+  idealFor?: string[];
+  notIdealFor?: string[];
+  pros?: string[];
+  cons?: string[];
+  frequentlyAskedQuestions?: Array<{ question: string; answer: string }>;
+  methodology?: string;
+  sources?: Array<{ label: string; url?: string }>;
+  publishedAt?: string;
+  indexable?: boolean;
 }
 
 export type ProductCardData = Product;

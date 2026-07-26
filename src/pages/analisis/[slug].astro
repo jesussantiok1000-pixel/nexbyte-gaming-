@@ -1,10 +1,12 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumbs from "../../components/global/Breadcrumbs.astro";
-import ProductCard from "../../components/product/ProductCard.astro";
+import ProductEditorialContent from "../../components/product/ProductEditorialContent.astro";
 import { approvedProducts, getValidAffiliateUrl } from "../../data/products";
 import type { Product } from "../../data/products";
 import { categoryBySlug } from "../../data/categories";
+import { getFaq, getProductH1, getProductSeoDescription, getProductSeoTitle } from "../../config/productSeo";
+import { siteConfig } from "../../config/site";
 
 export function getStaticPaths() {
   return approvedProducts.map((product) => ({ params: { slug: product.slug }, props: { product } }));
@@ -13,43 +15,79 @@ export function getStaticPaths() {
 const { product } = Astro.props;
 const category = categoryBySlug(product.categorySlug);
 const productCollection = categoryBySlug(product.subcategory ?? product.categorySlug);
-const isVerifiedLaptop = product.category === "Laptops" && Boolean(product.verifiedSpecs?.length);
 const hasVerifiedSpecs = Boolean(product.verifiedSpecs?.length);
 const affiliateUrl = getValidAffiliateUrl(product.affiliateUrl);
 const amazonCtaLabel = ["Teclados", "Ratones", "Accesorios", "Audio", "Monitores", "Setup"].includes(product.category) ? "Ver en Amazon" : "Ver disponibilidad en Amazon";
-const related = product.relatedSlugs
+const explicitlyRelated = product.relatedSlugs
   .map((slug: string) => approvedProducts.find((item) => item.slug === slug))
-  .filter((item:Product|undefined):item is Product=>Boolean(item))
-  .slice(0, 3);
+  .filter((item:Product|undefined):item is Product=>Boolean(item));
+const alternatives = [
+  ...explicitlyRelated.filter((item) => item.category === product.category),
+  ...approvedProducts.filter((item) => item.slug !== product.slug && item.category === product.category),
+].filter((item,index,items) => items.findIndex((candidate) => candidate.slug === item.slug) === index).slice(0,3);
+const complementary = [
+  ...explicitlyRelated.filter((item) => item.category !== product.category),
+  ...approvedProducts.filter((item) => item.slug !== product.slug && item.category !== product.category && item.usage.some((use) => product.usage.includes(use))),
+].filter((item,index,items) => items.findIndex((candidate) => candidate.slug === item.slug) === index).slice(0,3);
+const seoTitle = getProductSeoTitle(product);
+const seoDescription = getProductSeoDescription(product);
+const productH1 = getProductH1(product);
+const faq = getFaq(product);
+const canonicalUrl = new URL(product.analysisUrl,Astro.site??Astro.url).href;
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: product.analysisTitle,
-  description: product.shortDescription,
+  headline: productH1,
+  description: seoDescription,
   image: new URL(product.image,Astro.site??Astro.url).href,
   datePublished: product.updatedAt,
   dateModified: product.updatedAt,
-  author: { "@type": "Organization", name: "NEXBYTE" },
+  author: { "@type": "Person", name:siteConfig.author.name, url:new URL(siteConfig.author.url,siteConfig.url).href },
   publisher: { "@type": "Organization", name: "NEXBYTE" },
-  mainEntityOfPage: new URL(product.analysisUrl,Astro.site??Astro.url).href,
+  mainEntityOfPage: canonicalUrl,
+};
+const productSchema = {
+  "@context":"https://schema.org",
+  "@type":"Product",
+  name:product.title,
+  image:new URL(product.image,Astro.site??Astro.url).href,
+  description:product.shortDescription,
+  brand:product.brand ? {"@type":"Brand",name:product.brand} : undefined,
+  model:product.model,
+  category:product.category,
+  url:canonicalUrl,
+};
+const breadcrumbSchema = {
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  itemListElement:[
+    {"@type":"ListItem",position:1,name:"Inicio",item:new URL("/",Astro.site??Astro.url).href},
+    {"@type":"ListItem",position:2,name:category?.name??product.category,item:new URL(`/categorias/${product.categorySlug}`,Astro.site??Astro.url).href},
+    {"@type":"ListItem",position:3,name:product.title,item:canonicalUrl},
+  ],
+};
+const faqSchema = {
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  mainEntity:faq.map((item)=>({"@type":"Question",name:item.question,acceptedAnswer:{"@type":"Answer",text:item.answer}})),
 };
 ---
-<BaseLayout title={`${product.analysisTitle} | NEXBYTE`} description={product.shortDescription} image={product.image}>
+<BaseLayout title={seoTitle} description={seoDescription} image={product.image} noindex={product.indexable === false}>
   <div class="container page-shell">
     <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Análisis",href:"/seleccion"},...(product.subcategory && productCollection ? [{label:productCollection.name,href:`/categorias/${product.subcategory}`}] : []),{label:product.title}]} />
     <article>
       <header class="analysis-hero surface" data-product data-slug={product.slug} data-title={product.title}>
-        <img class:list={["analysis-product-image", {"analysis-product-image--catalog":hasVerifiedSpecs}]} src={product.image} alt={product.imageAlt} width="1536" height="1024" fetchpriority="high" />
+        <img class:list={["analysis-product-image", {"analysis-product-image--catalog":hasVerifiedSpecs}]} src={product.image} alt={product.imageAlt} width="1536" height="1024" loading="eager" decoding="sync" fetchpriority="high" />
         <div>
           <p class="eyebrow">{product.brand ?? category?.name ?? product.category}</p>
-          <h1>{product.title}</h1>
+          <h1>{productH1}</h1>
           {product.productType && <p class="product-type">{product.productType}</p>}
           <p>{product.shortDescription}</p>
           <button class="btn btn-secondary" type="button" data-favorite aria-pressed="false" aria-label={`Añadir ${product.title} a favoritos`}><span data-favorite-icon aria-hidden="true">♡</span> Favorito</button>
           <div class="availability availability--hero">
             {affiliateUrl
               ? <>
-                  <a class="btn btn-primary amazon-cta" href={affiliateUrl} target="_blank" rel="sponsored noopener noreferrer" aria-label={`Ver ${product.title} en Amazon`}>
+                  <a class="btn btn-primary amazon-cta" href={affiliateUrl} target="_blank" rel="sponsored nofollow noopener noreferrer" aria-label={`Ver ${product.title} en Amazon`}>
                     <span class="amazon-mark" aria-hidden="true"><b>a</b><svg viewBox="0 0 22 8"><path d="M2 2.5c4.8 3.6 11.2 3.7 16.5.3M16.7 1.5l2.5.8-.8 2.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                     <span>{amazonCtaLabel}</span><span class="external-arrow" aria-hidden="true">↗</span>
                   </a>
@@ -62,47 +100,26 @@ const articleSchema = {
 
       <div class="analysis-layout">
         <div class="prose">
-          <section><h2>Qué revisar antes de elegir</h2><p>{isVerifiedLaptop ? "Compara la configuración publicada con la variante disponible y revisa rendimiento, compatibilidad, soporte y garantía según el uso que necesitas." : "Conocer tus prioridades te ayudará a comparar opciones con más claridad y concentrarte en las características que realmente pueden mejorar tu experiencia."}</p></section>
-          <section><h2>¿Para quién encaja?</h2><ul>{product.recommendedFor.map((item) => <li>{item}</li>)}</ul></section>
-          {hasVerifiedSpecs && <section class="verified-specs"><h2>Puntos clave</h2><ul>{product.verifiedSpecs?.map((item) => <li>{item}</li>)}</ul></section>}
-          {product.compatibilityNotes?.length && <section><h2>Compatibilidad</h2><ul>{product.compatibilityNotes.map((item) => <li>{item}</li>)}</ul></section>}
-          {product.configurationNotice && <aside class="configuration-note"><strong>Configuración por confirmar</strong><p>{product.configurationNotice}</p></aside>}
-          <section><h2>Lo que destaca</h2><ul>{product.features.map((item) => <li>{item}</li>)}</ul></section>
-          <section><h2>Cómo puede mejorar tu experiencia</h2><ul>{product.advantages.map((item) => <li>{item}</li>)}</ul></section>
-          <section><h2>Antes de decidir</h2><ul>{product.limitations.map((item) => <li>{item}</li>)}</ul></section>
-          <section><h2>Evita estos errores</h2><ul>{product.commonMistakes.map((item) => <li>{item}</li>)}</ul></section>
-          <section id="criterios-compra"><h2>En qué deberías fijarte</h2><ul>{product.purchaseCriteria.map((item) => <li>{item}</li>)}</ul></section>
-          <section><h2>Por qué lo hemos seleccionado</h2><ul>{product.nexbyteCriteria.map((item) => <li>{item}</li>)}</ul></section>
-          <section><h2>Recomendación editorial</h2><p>{product.neutralRecommendation}</p></section>
-          <aside class="educational-note"><strong>Antes de elegir</strong><p>Las características pueden cambiar entre modelos. Usa esta guía para identificar lo que realmente necesitas y comprobar cada detalle antes de tomar una decisión.</p></aside>
-          <div class="availability availability--final">
-            {affiliateUrl
-              ? <>
-                  <a class="btn btn-primary amazon-cta" href={affiliateUrl} target="_blank" rel="sponsored noopener noreferrer" aria-label={`Ver ${product.title} en Amazon`}>
-                    <span class="amazon-mark" aria-hidden="true"><b>a</b><svg viewBox="0 0 22 8"><path d="M2 2.5c4.8 3.6 11.2 3.7 16.5.3M16.7 1.5l2.5.8-.8 2.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                    <span>{amazonCtaLabel}</span><span class="external-arrow" aria-hidden="true">↗</span>
-                  </a>
-                  <small>Consulta disponibilidad y condiciones actuales en Amazon.</small>
-                </>
-              : <div class="internal-actions"><button class="btn btn-primary availability-disabled" type="button" disabled title="Enlace de Amazon pendiente">Ver disponibilidad</button><a class="btn btn-secondary" href={`/categorias/${product.categorySlug}`}>Explorar productos similares</a></div>}
-          </div>
+          <ProductEditorialContent product={product} alternatives={alternatives} complementary={complementary} />
         </div>
         <aside class="analysis-index surface" aria-label="Lo esencial">
           <strong>Lo esencial</strong>
           <dl><dt>Tipo de producto</dt><dd>{product.productType ?? product.category}</dd>{product.subcategory && productCollection && <><dt>Subcategoría</dt><dd>{productCollection.name}</dd></>}<dt>Cómo se conecta</dt><dd>{product.connectivity}</dd><dt>Ideal para</dt><dd>{product.usageLabel}</dd></dl>
           <a href={`/categorias/${product.categorySlug}`}>Descubre más opciones →</a>
-          {isVerifiedLaptop && <a href={product.guideUrl}>Guía para elegir laptop →</a>}
+          <a href={product.guideUrl}>Guía relacionada →</a>
         </aside>
       </div>
 
-      {related.length > 0 && <section class="related-section"><h2>Alternativas relacionadas</h2><div class="related">{related.map((item, index) => <ProductCard product={item} index={index} />)}</div></section>}
     </article>
   </div>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 </BaseLayout>
 
 <style>
   .analysis-product-image--catalog{width:min(100%,460px)!important;height:auto!important;max-height:400px!important;justify-self:center;object-fit:contain!important;padding:20px;background:#f7f9fd}.internal-actions{display:flex;flex-wrap:wrap;gap:9px}.availability-disabled{opacity:.62;cursor:not-allowed;box-shadow:none}
-  .analysis-hero{display:grid;grid-template-columns:minmax(300px,.95fr) 1.05fr;align-items:center;gap:38px;padding:32px}.analysis-product-image{width:100%;height:100%;max-height:470px;object-fit:cover;border-radius:14px}.analysis-product-image--laptop{width:min(100%,420px);height:auto;max-height:400px;justify-self:center;object-fit:contain;padding:14px;background:#f7f9fd}.analysis-hero h1{margin:.15em 0;font-size:clamp(2rem,4vw,3.4rem);line-height:1.04}.analysis-hero div>p:not(.eyebrow){color:var(--color-text-muted);font-size:1.05rem}.analysis-hero .product-type{margin:.55rem 0 .25rem;color:var(--color-violet)!important;font-size:.82rem!important;font-weight:800}.availability{display:flex;flex-direction:column;align-items:flex-start}.availability--hero{margin-top:16px}.availability--final{margin-top:24px}.availability .btn{width:auto;max-width:100%}.amazon-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-color:#131921;background:#232f3e;color:#fff;box-shadow:0 9px 22px rgb(19 25 33 / .2)}.amazon-cta:hover{border-color:#ffb84d;background:#131921;color:#fff;box-shadow:0 12px 28px rgb(19 25 33 / .28)}.amazon-cta:focus-visible{outline:3px solid #ffb84d;outline-offset:3px}.amazon-mark{position:relative;display:inline-flex;width:25px;height:25px;flex:0 0 25px;align-items:flex-start;justify-content:center;color:#ff9900}.amazon-mark b{color:#fff;font:800 21px/19px Arial,sans-serif}.amazon-mark svg{position:absolute;left:2px;bottom:0;width:21px;height:8px}.external-arrow{color:#ffb84d;font-weight:900}.availability small{margin-top:7px;color:var(--color-text-muted);font-size:.74rem;line-height:1.4}.analysis-layout{display:grid;grid-template-columns:minmax(0,850px) 280px;justify-content:center;gap:30px;margin-top:32px}.analysis-layout .prose{margin:0}.analysis-layout section{scroll-margin-top:170px}.configuration-note{margin:24px 0;padding:18px 20px;border-left:4px solid #e7a51a;background:#fff8e7}.configuration-note p{margin:6px 0 0}.analysis-index{position:sticky;top:155px;align-self:start;padding:22px}.analysis-index dl{display:grid;grid-template-columns:1fr;margin:14px 0}.analysis-index dt{margin-top:10px;font-size:.75rem;font-weight:800;color:var(--color-violet);text-transform:uppercase}.analysis-index dd{margin:2px 0}.analysis-index a{display:block;margin-top:10px;color:var(--color-violet);font-weight:750}.educational-note{margin:30px 0;padding:20px;border-left:4px solid var(--color-cyan);border-radius:10px;background:#eefaff}.educational-note p{margin-bottom:0}.related-section{margin-top:52px}.related{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .analysis-hero{display:grid;grid-template-columns:minmax(300px,.95fr) 1.05fr;align-items:center;gap:38px;padding:32px}.analysis-product-image{width:100%;height:100%;max-height:470px;object-fit:cover;border-radius:14px}.analysis-product-image--laptop{width:min(100%,420px);height:auto;max-height:400px;justify-self:center;object-fit:contain;padding:14px;background:#f7f9fd}.analysis-hero h1{margin:.15em 0;font-size:clamp(2rem,4vw,3.4rem);line-height:1.04}.analysis-hero div>p:not(.eyebrow){color:var(--color-text-muted);font-size:1.05rem}.analysis-hero .product-type{margin:.55rem 0 .25rem;color:var(--color-violet)!important;font-size:.82rem!important;font-weight:800}.availability{display:flex;flex-direction:column;align-items:flex-start}.availability--hero{margin-top:16px}.availability .btn{width:auto;max-width:100%}.amazon-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-color:#131921;background:#232f3e;color:#fff;box-shadow:0 9px 22px rgb(19 25 33 / .2)}.amazon-cta:hover{border-color:#ffb84d;background:#131921;color:#fff;box-shadow:0 12px 28px rgb(19 25 33 / .28)}.amazon-cta:focus-visible{outline:3px solid #ffb84d;outline-offset:3px}.amazon-mark{position:relative;display:inline-flex;width:25px;height:25px;flex:0 0 25px;align-items:flex-start;justify-content:center;color:#ff9900}.amazon-mark b{color:#fff;font:800 21px/19px Arial,sans-serif}.amazon-mark svg{position:absolute;left:2px;bottom:0;width:21px;height:8px}.external-arrow{color:#ffb84d;font-weight:900}.availability small{margin-top:7px;color:var(--color-text-muted);font-size:.74rem;line-height:1.4}.analysis-layout{display:grid;grid-template-columns:minmax(0,850px) 280px;justify-content:center;gap:30px;margin-top:32px}.analysis-layout .prose{margin:0}.analysis-layout section{scroll-margin-top:170px}.configuration-note{margin:24px 0;padding:18px 20px;border-left:4px solid #e7a51a;background:#fff8e7}.configuration-note p{margin:6px 0 0}.analysis-index{position:sticky;top:155px;align-self:start;padding:22px}.analysis-index dl{display:grid;grid-template-columns:1fr;margin:14px 0}.analysis-index dt{margin-top:10px;font-size:.75rem;font-weight:800;color:var(--color-violet);text-transform:uppercase}.analysis-index dd{margin:2px 0}.analysis-index a{display:block;margin-top:10px;color:var(--color-violet);font-weight:750}.educational-note{margin:30px 0;padding:20px;border-left:4px solid var(--color-cyan);border-radius:10px;background:#eefaff}.educational-note p{margin-bottom:0}.related-section{margin-top:52px}.related{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
   @media(max-width:900px){.analysis-hero,.analysis-layout{grid-template-columns:1fr}.analysis-index{position:static;grid-row:1}.related{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.analysis-hero{padding:16px}.related{grid-template-columns:1fr}}
 </style>

@@ -1,0 +1,81 @@
+---
+import ProductCard from "./ProductCard.astro";
+import type { Product } from "../../data/products";
+import { analysisMethodology, getFaq, getQuickVerdict, getSeoProfile } from "../../config/productSeo";
+
+interface Props {
+  product: Product;
+  alternatives: Product[];
+  complementary: Product[];
+}
+
+const { product, alternatives, complementary } = Astro.props;
+const profile = getSeoProfile(product);
+const faq = getFaq(product);
+const pros = product.pros?.length ? product.pros : product.advantages;
+const cons = product.cons?.length ? product.cons : product.limitations;
+const idealFor = product.idealFor?.length ? product.idealFor : product.recommendedFor;
+const notIdealFor = product.notIdealFor?.length
+  ? product.notIdealFor
+  : product.limitations.slice(0, 3).map((item) => `Quienes no puedan asumir que ${item.charAt(0).toLowerCase()}${item.slice(1)}`);
+const specs = product.verifiedSpecs?.length ? product.verifiedSpecs : product.features;
+const compatibilityNotes = product.compatibilityNotes ?? [];
+const sources = product.sources ?? [];
+---
+
+<section class="quick-verdict surface" aria-labelledby="veredicto-rapido">
+  <h2 id="veredicto-rapido">Veredicto rápido</h2>
+  <p>{getQuickVerdict(product)}</p>
+</section>
+
+<section><h2>¿Para quién es recomendable?</h2><ul>{idealFor.map((item) => <li>{item}</li>)}</ul></section>
+{notIdealFor.length > 0 && <section><h2>¿Para quién no es recomendable?</h2><ul>{notIdealFor.map((item) => <li>{item}</li>)}</ul></section>}
+
+<section><h2>Características principales</h2><ul>{specs.map((item) => <li>{item}</li>)}</ul></section>
+
+<section>
+  <h2>Análisis según su uso</h2>
+  <p>{product.longDescription ?? `${product.shortDescription} Para valorar si encaja, conviene comparar ${profile.intent} con las necesidades reales de uso.`}</p>
+</section>
+
+<section class="pros-cons" aria-label="Ventajas y desventajas">
+  <div><h2>Ventajas</h2><ul>{pros.map((item) => <li>{item}</li>)}</ul></div>
+  <div><h2>Desventajas</h2><ul>{cons.map((item) => <li>{item}</li>)}</ul></div>
+</section>
+
+{compatibilityNotes.length > 0 && <section><h2>Compatibilidad y requisitos</h2><ul>{compatibilityNotes.map((item) => <li>{item}</li>)}</ul></section>}
+{product.configurationNotice && <aside class="configuration-note"><strong>Configuración por confirmar</strong><p>{product.configurationNotice}</p></aside>}
+
+<section id="criterios-compra"><h2>Qué revisar antes de comprar</h2><ul>{product.purchaseCriteria.map((item) => <li>{item}</li>)}</ul></section>
+
+<section>
+  <h2>¿Vale la pena?</h2>
+  <p>{product.neutralRecommendation}</p>
+</section>
+
+<section class="faq" aria-labelledby="preguntas-frecuentes">
+  <h2 id="preguntas-frecuentes">Preguntas frecuentes</h2>
+  {faq.map((item) => <details><summary>{item.question}</summary><p>{item.answer}</p></details>)}
+</section>
+
+<section class="methodology">
+  <h2>Metodología</h2>
+  <p>{product.methodology ?? analysisMethodology}</p>
+  {sources.length > 0 && <><h3>Fuentes consultadas</h3><ul>{sources.map((source) => <li>{source.url ? <a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a> : source.label}</li>)}</ul></>}
+  <p><small>Última actualización: <time datetime={product.updatedAt}>{new Intl.DateTimeFormat("es",{dateStyle:"long"}).format(new Date(`${product.updatedAt}T12:00:00`))}</time></small></p>
+  <p class="editorial-links"><a href="/autor/jesus-manuel">Investigado y redactado por Jesús Manuel</a><a href="/metodologia">Consultar la metodología</a><a href="/politica-editorial">Política editorial</a></p>
+</section>
+
+{alternatives.length > 0 && <section class="related-section"><h2>Alternativas a {product.title}</h2><div class="related">{alternatives.map((item,index) => <ProductCard product={item} index={index} />)}</div></section>}
+{complementary.length > 0 && <section class="related-section"><h2>Completa tu setup</h2><div class="related">{complementary.map((item,index) => <ProductCard product={item} index={index} />)}</div></section>}
+
+<style>
+  .quick-verdict{margin:0 0 30px;padding:22px;border-left:4px solid var(--color-violet);background:#f7f4ff}.quick-verdict h2{margin-top:0}.quick-verdict p{margin-bottom:0}
+  .pros-cons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.pros-cons>div{padding:20px;border:1px solid var(--color-border);background:#fff}.pros-cons h2{margin-top:0}
+  .configuration-note{margin:24px 0;padding:18px 20px;border-left:4px solid #e7a51a;background:#fff8e7}.configuration-note p{margin:6px 0 0}
+  .faq details{margin:10px 0;border:1px solid var(--color-border);background:#fff}.faq summary{padding:15px 17px;font-weight:750;cursor:pointer}.faq details p{margin:0;padding:0 17px 17px}
+  .methodology{padding-top:8px;border-top:1px solid var(--color-border)}.methodology small{color:var(--color-text-muted)}.editorial-links{display:flex;flex-wrap:wrap;gap:8px 18px}.editorial-links a{color:var(--color-violet);font-weight:700}
+  .related-section{margin-top:48px}.related{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  @media(max-width:760px){.pros-cons{grid-template-columns:1fr}.related{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:560px){.related{grid-template-columns:1fr}}
+</style>

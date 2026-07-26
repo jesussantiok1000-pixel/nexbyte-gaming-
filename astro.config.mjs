@@ -1,11 +1,23 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://nexbytegaming.netlify.app',
+  integrations: [
+    sitemap({
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/$/, '') || '/';
+        return pathname !== '/404'
+          && pathname !== '/buscar'
+          && pathname !== '/favoritos'
+          && !pathname.startsWith('/producto/');
+      },
+    }),
+  ],
   redirects: {
     '/analisis/teclado-mecanico-tkl': '/analisis/krom-kasic-tkl',
     '/analisis/raton-gaming-inalambrico': '/analisis/mars-gaming-mmw3',

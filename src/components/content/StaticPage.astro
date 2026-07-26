@@ -1,17 +1,19 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumbs from "../global/Breadcrumbs.astro";
-interface Section { title:string; text:string }
-interface Props { title:string; description:string; eyebrow?:string; sections:Section[]; updated?:string }
-const {title,description,eyebrow="NEXBYTE",sections,updated}=Astro.props;
+interface Section { title:string; text:string; links?:Array<{label:string;href:string}> }
+interface Props { title:string; description:string; eyebrow?:string; sections:Section[]; updated?:string; updatedIso?:string }
+const {title,description,eyebrow="NEXBYTE",sections,updated,updatedIso="2026-07-23"}=Astro.props;
 ---
 <BaseLayout title={`${title} | NEXBYTE`} description={description}>
   <div class="container page-shell">
     <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:title}]} />
     <header class="page-hero surface"><p class="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p></header>
     <article class="prose surface info-card">
-      {sections.map(section=><section><h2>{section.title}</h2><p>{section.text}</p></section>)}
-      {updated && <p><small>Versión actualizada: <time datetime="2026-07-23">{updated}</time></small></p>}
+      {sections.map(section=><section><h2>{section.title}</h2><p>{section.text}</p>{section.links?.length&&<p class="section-links">{section.links.map(link=><a href={link.href}>{link.label} →</a>)}</p>}</section>)}
+      <slot />
+      {updated && <p><small>Versión actualizada: <time datetime={updatedIso}>{updated}</time></small></p>}
     </article>
   </div>
 </BaseLayout>
+<style>.section-links{display:flex;flex-wrap:wrap;gap:10px 18px}.section-links a{color:var(--color-violet);font-weight:700}</style>

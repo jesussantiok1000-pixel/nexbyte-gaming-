@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/global/Breadcrumbs.astro";
+import SocialLinks from "../../components/global/SocialLinks.astro";
+import { siteConfig } from "../../config/site";
+import { approvedProducts } from "../../data/products";
+import { guides,comparisons } from "../../data/editorial";
+const authorUrl=new URL(siteConfig.author.url,siteConfig.url).href;
+const schema={"@context":"https://schema.org","@graph":[
+  {"@type":"Person","@id":`${authorUrl}#person`,name:siteConfig.author.name,url:authorUrl,jobTitle:siteConfig.author.role,worksFor:{"@type":"Organization","@id":`${siteConfig.url}/#organization`,name:siteConfig.name}},
+  {"@type":"ProfilePage",url:authorUrl,name:`${siteConfig.author.name}, responsable editorial de NEXBYTE`,inLanguage:siteConfig.language,mainEntity:{"@id":`${authorUrl}#person`}},
+]};
+---
+<BaseLayout title="Jesús Manuel, responsable editorial | NEXBYTE" description="Conoce la labor editorial, metodología y contenidos publicados por Jesús Manuel en NEXBYTE.">
+  <div class="container page-shell">
+    <Breadcrumbs items={[{label:"Inicio",href:"/"},{label:"Autor"},{label:siteConfig.author.name}]}/>
+    <header class="page-hero surface"><p class="eyebrow">Autoría y transparencia</p><h1>{siteConfig.author.name}</h1><p>{siteConfig.author.role}. Investiga y organiza información verificable sobre tecnología, gaming, desarrollo web, equipos informáticos y productividad.</p><SocialLinks location="author_page" showLabels /></header>
+    <div class="author-grid">
+      <article class="prose surface info-card">
+        <section><h2>Labor editorial</h2><p>La elaboración de contenidos parte de especificaciones disponibles, documentación oficial y comparación entre productos de una misma categoría. Las fichas indican sus limitaciones y evitan presentar como prueba física aquello que solo se ha documentado.</p></section>
+        <section><h2>Metodología utilizada</h2><p>Se revisan datos identificables, compatibilidad, casos de uso y criterios prácticos antes de estructurar cada análisis, guía o comparativa.</p><p><a href="/metodologia">Consultar la metodología de NEXBYTE →</a></p></section>
+        <section><h2>Contacto editorial</h2><p>Las observaciones y solicitudes de corrección pueden enviarse mediante la <a href="/contacto">página de contacto</a> o siguiendo la <a href="/politica-de-correcciones">política de correcciones</a>.</p></section>
+      </article>
+      <aside class="surface info-card"><h2>Contenidos publicados</h2><h3>Análisis</h3><ul>{approvedProducts.slice(0,8).map(product=><li><a href={product.analysisUrl}>{product.title}</a></li>)}</ul><h3>Guías</h3><ul>{guides.map(guide=><li><a href={`/guias/${guide.slug}`}>{guide.title}</a></li>)}</ul><h3>Comparativas</h3><ul>{comparisons.map(comparison=><li><a href={`/comparativas/${comparison.slug}`}>{comparison.title}</a></li>)}</ul></aside>
+    </div>
+  </div>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}/>
+</BaseLayout>
+<style>.author-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px}.author-grid aside{align-self:start}.author-grid a{color:var(--color-violet);font-weight:700}@media(max-width:800px){.author-grid{grid-template-columns:1fr}}</style>

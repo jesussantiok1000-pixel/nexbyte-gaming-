@@ -3,7 +3,6 @@ import "../styles/global.css";
 import "../styles/motion.css";
 import SiteHeader from "../components/global/SiteHeader.astro";
 import SiteFooter from "../components/global/SiteFooter.astro";
-import WhatsAppButton from "../components/global/WhatsAppButton.astro";
 import BackButton from "../components/global/BackButton.astro";
 import ToastRegion from "../components/ui/ToastRegion.astro";
 
@@ -73,7 +72,6 @@ const organization = {
       <slot />
       {showBackButton && <BackButton />}
     </main>
-    <WhatsAppButton />
     <SiteFooter />
     <ToastRegion />
     <script>

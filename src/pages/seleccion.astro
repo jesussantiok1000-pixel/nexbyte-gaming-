@@ -4,7 +4,7 @@ import ProductCard from "../components/product/ProductCard.astro";
 import Breadcrumbs from "../components/global/Breadcrumbs.astro";
 import EditorialHero from "../components/content/EditorialHero.astro";
 import { productRepository } from "../lib/products/LocalProductRepository";
-const products = await productRepository.getFeatured();
+const products = await productRepository.getFeatured(6);
 ---
 <BaseLayout title="Selección NEXBYTE | Tecnología para tu setup" description="Productos destacados para gaming, estudio, productividad y setup.">
   <div class="container page-shell">

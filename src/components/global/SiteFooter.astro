@@ -1,6 +1,7 @@
 ---
+import { approvedProducts, getValidAffiliateUrl } from "../../data/products";
 const year=new Date().getFullYear();
-const affiliateDisclosureEnabled=false;
+const affiliateDisclosureEnabled=approvedProducts.some((product)=>Boolean(getValidAffiliateUrl(product.affiliateUrl)));
 const columns=[
   ["Explorar",[["Categorías","/categorias"],["Selección","/seleccion"],["Comparativas","/comparativas"],["Guías","/guias"]]],
   ["Ayuda y transparencia",[["Sobre NEXBYTE","/sobre-nexbyte"],["Metodología","/metodologia"],["Contacto","/contacto"],["WhatsApp: +51 904 481 656","https://wa.me/51904481656"],["Afiliados","/afiliados"]]],

@@ -1,7 +1,8 @@
 ---
-import { approvedProducts as products } from "../../data/products";
+import { approvedProducts } from "../../data/products";
 import FilterSidebar from "./FilterSidebar.astro";
 import ProductCard from "../product/ProductCard.astro";
+const products = approvedProducts.filter((product) => product.showOnHome !== false);
 ---
 <section id="seleccion-productos" class="explorer container" aria-labelledby="titulo-seleccion">
   <FilterSidebar />

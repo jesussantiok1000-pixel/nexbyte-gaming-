@@ -1,6 +1,7 @@
 ---
 import StaticPage from "../components/content/StaticPage.astro";
-const affiliateDisclosureEnabled = false;
+import { approvedProducts, getValidAffiliateUrl } from "../data/products";
+const affiliateDisclosureEnabled = approvedProducts.some((product) => Boolean(getValidAffiliateUrl(product.affiliateUrl)));
 const sections=[
   ...(affiliateDisclosureEnabled ? [{title:"Aviso de afiliación",text:"Como afiliado de Amazon, NEXBYTE puede obtener ingresos por compras que cumplan los requisitos."}] : []),
   {title:"Transparencia comercial",text:"Cuando una opción incluya un enlace de afiliado, se identificará de forma clara antes de dirigir al proveedor."},

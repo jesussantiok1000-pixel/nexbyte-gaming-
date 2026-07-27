@@ -3,6 +3,13 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 import tailwindcss from '@tailwindcss/vite';
+import { approvedProducts } from './src/data/products';
+
+const noindexAnalysisPaths = new Set(
+  approvedProducts
+    .filter((product) => product.indexable === false)
+    .map((product) => product.analysisUrl.replace(/\/$/, '') || '/'),
+);
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,6 +21,9 @@ export default defineConfig({
         return pathname !== '/404'
           && pathname !== '/buscar'
           && pathname !== '/favoritos'
+          && pathname !== '/analisis/laptop-gaming-equilibrada'
+          && pathname !== '/transparencia-afiliados'
+          && !noindexAnalysisPaths.has(pathname)
           && !pathname.startsWith('/producto/');
       },
     }),

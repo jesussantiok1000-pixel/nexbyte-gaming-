@@ -41,6 +41,7 @@ export interface Product {
   featured: boolean;
   status: ProductStatus;
   relatedSlugs: string[];
+  showAlternatives?: boolean;
   updatedAt: string;
   asin?: string;
   amazonUrl?: string;
@@ -1749,17 +1750,46 @@ export const products: Product[] = [
     updatedAt:"2026-07-26"
   }),
   Object.assign(catalogProduct({
-    slug:"ergosolid-brazo-monitor-17-30",brand:"Ergosolid",model:"Brazo para monitor 17–30 pulgadas",productType:"Brazo para monitor",
-    title:"Ergosolid brazo para monitor de 17 a 30 pulgadas",category:"Accesorios",categorySlug:"accesorios-gaming",
-    image:"/images/ergosolid-brazo-monitor-17-30.jpg",imageAlt:"Brazo Ergosolid ajustable para monitor de 17 a 30 pulgadas",
-    shortDescription:"Brazo ajustable para liberar espacio y mejorar la posición de monitores compatibles con montaje VESA.",
-    verifiedSpecs:["Monitores de 17 a 30 pulgadas declarados","VESA 75 × 75 y 100 × 100","Resorte de gas","Rotación de 360° declarada","Montaje en escritorio","Construcción de aluminio y metal declarada"],
-    filters:["accesorios","setup","monitor","ergonomía","vesa","escritorio"],
-    highlights:["Compatibilidad VESA 75 y 100","Resorte de gas","Rotación de 360° declarada"],useCases:["Ergonomía de escritorio","Liberar superficie","Ajustar la posición del monitor"],
-    compatibilityNotes:["Confirmar peso del monitor","Revisar patrón VESA","Comprobar grosor y resistencia del escritorio"],
-    limitations:["La compatibilidad no depende solo del tamaño de pantalla","Requiere una superficie de montaje adecuada"],connectivity:"No aplica",usage:["productividad","ergonomia","setup"],usageLabel:"Ergonomía y organización del escritorio",relatedSlugs:["samsung-essential-s30gd-27","secretlab-titan-evo-regular","mars-gaming-mc-3tlite"],affiliateUrl:"https://link.amazon/B043b6Y7w"
+    slug:"ergosolid-brazo-monitor-17-30",brand:"Ergosolid",model:"NB F80 grafito",productType:"Brazo articulado de escritorio para un monitor",
+    title:"Ergosolid NB F80 grafito",category:"Accesorios",categorySlug:"accesorios-gaming",
+    image:"/images/ergosolid-brazo-monitor-17-30.jpg",imageAlt:"Brazo Ergosolid NB F80 grafito para un monitor con placa VESA",
+    shortDescription:"Brazo articulado de escritorio con resorte de gas para un monitor de 17 a 30 pulgadas, entre 2 y 9 kg y con montaje VESA 75 × 75 o 100 × 100 mm.",
+    verifiedSpecs:["Modelo NB F80 en acabado grafito","Para un monitor de 17 a 30 pulgadas","Carga admitida de 2 a 9 kg","VESA 75 × 75 y 100 × 100 mm","Resorte de gas con tensión ajustable","Instalación mediante abrazadera para bordes de 5 a 95 mm o a través de un orificio","Inclinación vertical de +35° a −50°","Ajuste vertical de 0 a 260 mm","Alcance de 150 a 535 mm","Rotación de pantalla para orientación horizontal o vertical","Gestión de cables integrada","Uso interior"],
+    filters:["accesorios","setup","monitor","ergonomía","vesa 75","vesa 100","escritorio","brazo articulado","resorte de gas"],
+    highlights:["Admite monitores de 2 a 9 kg","VESA 75 × 75 y 100 × 100 mm","Abrazadera o montaje por orificio"],useCases:["Liberar superficie útil del escritorio","Ajustar la posición de un monitor compatible","Alternar entre orientación horizontal y vertical"],
+    compatibilityNotes:["El monitor debe pesar entre 2 y 9 kg sin contar su base original y disponer de VESA 75 × 75 o 100 × 100 mm","La referencia comercial de 17 a 30 pulgadas no sustituye la comprobación del peso, el patrón VESA y la forma posterior de la pantalla","La abrazadera requiere un borde de escritorio compatible con el intervalo documentado de 5 a 95 mm; la otra instalación utiliza un orificio en el tablero","El escritorio debe soportar al menos tres veces la carga total formada por soporte, monitor y accesorios, según el manual","Debe existir espacio suficiente detrás y alrededor del monitor para el alcance del brazo, la orientación elegida y los cables"],
+    limitations:["Está diseñado para un solo monitor","No admite pantallas que pesen menos de 2 kg o más de 9 kg","Solo acepta VESA 75 × 75 y 100 × 100 mm sin un adaptador adicional documentado","La abrazadera no sirve para bordes fuera del intervalo de 5 a 95 mm","El alcance máximo documentado es de 535 mm","La compatibilidad con pantallas curvas o ultrawide no está garantizada por el tamaño diagonal"],connectivity:"Montaje mecánico en escritorio mediante abrazadera o a través de un orificio",usage:["productividad","ergonomia","setup"],usageLabel:"Ergonomía y organización de escritorios con un monitor compatible",relatedSlugs:["samsung-essential-s30gd-27","secretlab-titan-evo-regular"],affiliateUrl:"https://link.amazon/B043b6Y7w"
   }), {
-    indexable:false
+    subcategory:"Soportes para monitor",
+    seoTitle:"Ergosolid NB F80: análisis y compatibilidad | NEXBYTE",
+    seoDescription:"Análisis documental del brazo Ergosolid NB F80 grafito: monitores de 17–30 pulgadas y 2–9 kg, VESA 75/100, ajustes, montaje y límites.",
+    longDescription:"El Ergosolid NB F80 grafito es un brazo articulado de escritorio para una sola pantalla. Sustituye la base original del monitor por un montaje VESA y permite desplazar la pantalla dentro del recorrido documentado del brazo. Puede resultar útil cuando se busca liberar superficie, elevar el monitor o alternar entre orientación horizontal y vertical. El ajuste se realiza mediante un resorte de gas cuya tensión debe adaptarse al peso instalado. La compatibilidad real no depende únicamente de que la pantalla mida entre 17 y 30 pulgadas: el monitor debe estar dentro del intervalo de 2 a 9 kg, usar VESA 75 × 75 o 100 × 100 mm y dejar espacio para la placa y los cables. También hay que comprobar el escritorio. La instalación puede hacerse con una abrazadera en bordes de 5 a 95 mm o mediante un orificio en el tablero; el manual exige que la superficie soporte al menos tres veces la carga total. El brazo ofrece un alcance documentado de 150 a 535 mm y un ajuste vertical de hasta 260 mm. Es posible inclinar y orientar la pantalla, pero la posición final también depende de su centro de gravedad, su forma y la tensión aplicada al resorte. NEXBYTE no ha realizado pruebas físicas de estabilidad, facilidad de ajuste o durabilidad.",
+    editorialSummary:"Puede tener sentido para organizar un escritorio con un solo monitor de 2 a 9 kg y VESA 75 o 100. Antes de instalarlo, el peso de la pantalla, el patrón VESA, el borde u orificio disponible y la resistencia del tablero deben cumplir los límites documentados.",
+    editorialVerdict:"El NB F80 ofrece dos métodos de montaje y un recorrido articulado útil para separar la pantalla de su base original. Su principal límite es preciso: solo cubre un monitor de 2 a 9 kg con VESA 75 × 75 o 100 × 100 mm y necesita un escritorio compatible con la sujeción elegida.",
+    idealFor:["Escritorios donde la base original del monitor ocupa superficie útil","Un monitor de 17 a 30 pulgadas cuyo peso esté entre 2 y 9 kg","Pantallas con VESA 75 × 75 o 100 × 100 mm","Usuarios que necesiten variar altura, alcance u orientación de una sola pantalla","Tableros compatibles con abrazadera o montaje mediante orificio"],
+    notIdealFor:["Configuraciones con dos monitores","Pantallas de menos de 2 kg o más de 9 kg","Monitores sin VESA 75 × 75 o 100 × 100 mm","Escritorios que no soporten la carga total indicada por el manual","Bordes fuera del intervalo admitido por la abrazadera","Instalaciones sin espacio posterior para articular el brazo"],
+    pros:["Dos métodos de instalación documentados","Intervalo de carga definido de 2 a 9 kg","Compatibilidad con los patrones VESA 75 y 100","Permite orientación horizontal o vertical","Gestión de cables integrada","Alcance máximo documentado de 535 mm"],
+    cons:["Solo admite un monitor","No cubre pesos fuera del intervalo de 2 a 9 kg","No admite otros patrones VESA sin una solución adicional compatible","La abrazadera está limitada a bordes de 5 a 95 mm","La pantalla y el brazo necesitan espacio libre detrás del escritorio"],
+    purchaseCriteria:["Pesar el monitor sin su base original y comprobar que esté entre 2 y 9 kg","Medir la separación entre orificios y confirmar VESA 75 × 75 o 100 × 100 mm","Comprobar que la placa pueda asentarse en la parte posterior de la pantalla sin interferencias","Medir el borde del tablero si se utilizará la abrazadera","Confirmar que el tablero soporte al menos tres veces la carga total","Verificar el espacio posterior necesario para un alcance de hasta 535 mm","Planificar el recorrido de alimentación y vídeo sin doblar ni comprimir los cables","Comprobar que los tornillos elegidos tengan la medida y profundidad indicadas por el fabricante del monitor"],
+    neutralRecommendation:"Es una opción documentada para sustituir la base de un único monitor compatible y recuperar superficie de escritorio. Si la pantalla queda fuera de 2–9 kg, no usa VESA 75/100, el tablero no admite ninguno de los dos montajes o se necesitan dos pantallas, debe elegirse otro tipo de soporte.",
+    frequentlyAskedQuestions:[
+      {question:"¿Qué patrones VESA admite el Ergosolid NB F80?",answer:"Admite VESA 75 × 75 y 100 × 100 mm."},
+      {question:"¿Cuánto peso puede soportar?",answer:"La documentación establece un intervalo de carga de 2 a 9 kg para el monitor."},
+      {question:"¿Sirve para un monitor de 30 pulgadas?",answer:"Puede servir si, además del tamaño, el monitor pesa entre 2 y 9 kg, utiliza VESA 75 o 100 y su forma permite montar la placa sin interferencias."},
+      {question:"¿Puede instalarse en cualquier escritorio?",answer:"No. La abrazadera admite bordes de 5 a 95 mm y también existe montaje mediante un orificio. El manual exige que el escritorio soporte al menos tres veces la carga total."},
+      {question:"¿Permite colocar la pantalla en vertical?",answer:"Sí. El soporte incorpora giro de la pantalla para alternar entre orientación horizontal y vertical."},
+      {question:"¿Es compatible con monitores curvos o ultrawide?",answer:"La documentación consultada no garantiza categorías concretas. La compatibilidad depende del peso, VESA, forma posterior, centro de gravedad y espacio disponible."},
+      {question:"¿Qué alcance tiene el brazo?",answer:"La ficha oficial documenta un recorrido de 150 a 535 mm."},
+      {question:"¿Qué debe comprobarse antes de instalarlo?",answer:"Peso, patrón VESA, resistencia y geometría del escritorio, método de montaje, espacio posterior y recorrido seguro de los cables."}
+    ],
+    methodology:"Este análisis documental utiliza la ficha oficial del Ergosolid NB F80 grafito y el manual multilingüe F80 distribuido por Ergosolid. Las especificaciones se limitan a la variante de un monitor identificada por su diseño, rango de 17 a 30 pulgadas, carga de 2 a 9 kg y VESA 75/100. NEXBYTE no ha probado físicamente el soporte y no presenta valoraciones propias sobre estabilidad, suavidad de movimiento o durabilidad.",
+    sources:[
+      {label:"Ergosolid Francia — NB F80 grafito, ficha oficial del producto",url:"https://ergosolid.fr/product/nb-f80-support-de-bureau-avec-ressort-a-gaz-pour-ecrans-lcd-17-30/"},
+      {label:"Ergosolid — F80, guía oficial de instalación y soporte",url:"https://ergosolid.fr/support/f80/"},
+      {label:"Ergosolid Italia — NB F80G grafito, parámetros técnicos y contenido",url:"https://ergosolid.it/shop/nb-f80-supporto-da-scrivania-con-molla-a-gas-per-schermi-tv-lcd-e-led/"}
+    ],
+    showAlternatives:false,
+    indexable:true
   }),
   Object.assign(catalogProduct({
     slug:"arctic-mx-4-4g",brand:"ARCTIC",model:"MX-4",productType:"Pasta térmica para interfaces de CPU y GPU compatibles",

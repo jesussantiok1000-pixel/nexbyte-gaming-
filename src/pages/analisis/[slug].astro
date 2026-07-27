@@ -21,7 +21,7 @@ const amazonCtaLabel = ["Teclados", "Ratones", "Accesorios", "Audio", "Monitores
 const explicitlyRelated = product.relatedSlugs
   .map((slug: string) => approvedProducts.find((item) => item.slug === slug))
   .filter((item:Product|undefined):item is Product=>Boolean(item));
-const alternatives = [
+const alternatives = product.showAlternatives === false ? [] : [
   ...explicitlyRelated.filter((item) => item.category === product.category),
   ...approvedProducts.filter((item) => item.slug !== product.slug && item.category === product.category),
 ].filter((item,index,items) => items.findIndex((candidate) => candidate.slug === item.slug) === index).slice(0,3);

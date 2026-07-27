@@ -460,7 +460,7 @@ export const products: Product[] = [
     sources:[
       {label:"Imagen local utilizada actualmente por NEXBYTE"}
     ],
-    indexable:false,
+    indexable:true,
     updatedAt:"2026-07-26"
   }),
   Object.assign(catalogProduct({
@@ -1748,7 +1748,7 @@ export const products: Product[] = [
     ],
     updatedAt:"2026-07-26"
   }),
-  catalogProduct({
+  Object.assign(catalogProduct({
     slug:"ergosolid-brazo-monitor-17-30",brand:"Ergosolid",model:"Brazo para monitor 17–30 pulgadas",productType:"Brazo para monitor",
     title:"Ergosolid brazo para monitor de 17 a 30 pulgadas",category:"Accesorios",categorySlug:"accesorios-gaming",
     image:"/images/ergosolid-brazo-monitor-17-30.jpg",imageAlt:"Brazo Ergosolid ajustable para monitor de 17 a 30 pulgadas",
@@ -1758,6 +1758,8 @@ export const products: Product[] = [
     highlights:["Compatibilidad VESA 75 y 100","Resorte de gas","Rotación de 360° declarada"],useCases:["Ergonomía de escritorio","Liberar superficie","Ajustar la posición del monitor"],
     compatibilityNotes:["Confirmar peso del monitor","Revisar patrón VESA","Comprobar grosor y resistencia del escritorio"],
     limitations:["La compatibilidad no depende solo del tamaño de pantalla","Requiere una superficie de montaje adecuada"],connectivity:"No aplica",usage:["productividad","ergonomia","setup"],usageLabel:"Ergonomía y organización del escritorio",relatedSlugs:["samsung-essential-s30gd-27","secretlab-titan-evo-regular","mars-gaming-mc-3tlite"],affiliateUrl:"https://link.amazon/B043b6Y7w"
+  }), {
+    indexable:false
   }),
   Object.assign(catalogProduct({
     slug:"arctic-mx-4-4g",brand:"ARCTIC",model:"MX-4",productType:"Pasta térmica para interfaces de CPU y GPU compatibles",

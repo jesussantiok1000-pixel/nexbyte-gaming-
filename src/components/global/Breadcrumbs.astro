@@ -1,5 +1,5 @@
 ---
-interface Item { label:string; href?:string }
+interface Item { label:string; href?:string; schemaHref?:string }
 const { items } = Astro.props as { items: Item[] };
 const breadcrumbSchema = {
   "@context":"https://schema.org",
@@ -8,7 +8,7 @@ const breadcrumbSchema = {
     "@type":"ListItem",
     position:index+1,
     name:item.label,
-    ...(item.href?{item:new URL(item.href,Astro.site??Astro.url).href}:{}),
+    ...(item.schemaHref || item.href ? {item:new URL(item.schemaHref ?? item.href!,Astro.site??Astro.url).href} : {}),
   })),
 };
 ---

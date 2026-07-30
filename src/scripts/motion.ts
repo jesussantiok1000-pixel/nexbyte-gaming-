@@ -45,6 +45,27 @@ if (!reduceMotion.matches && "IntersectionObserver" in window) {
     });
   });
 
+  if (homeStagger && matchMedia("(min-width: 1024px)").matches) {
+    const homeSections = homeStagger.querySelectorAll<HTMLElement>(":scope > section");
+    homeSections.forEach((section) => {
+      section.dataset.homeLift = "";
+      section.dataset.homeSectionLift = "";
+      section.style.setProperty("--reveal-index", "0");
+      revealElements.add(section);
+
+      section.querySelectorAll<HTMLElement>(
+        "h1, h2, h3, h4, h5, h6, p, li, blockquote, summary, .eyebrow, .section-heading"
+      ).forEach((text, index) => {
+        if (text.closest("[hidden]") || text.matches("[hidden]")) return;
+        text.dataset.homeLift = "";
+        const textIndex = Math.min(index % 5, 4);
+        text.dataset.revealIndex = String(textIndex);
+        text.style.setProperty("--reveal-index", String(textIndex));
+        revealElements.add(text);
+      });
+    });
+  }
+
   document.querySelectorAll<HTMLElement>(
     ".header-main > *, .nav-inner > *, .mobile-menu nav > *, .breadcrumbs > *, .page-hero > *, .editorial-hero__copy > *"
   ).forEach((item, index) => {
@@ -70,6 +91,8 @@ if (!reduceMotion.matches && "IntersectionObserver" in window) {
         item.removeAttribute("data-reveal-card");
         item.removeAttribute("data-reveal-index");
         item.removeAttribute("data-home-reveal");
+        item.removeAttribute("data-home-lift");
+        item.removeAttribute("data-home-section-lift");
         item.style.removeProperty("--reveal-index");
       };
       item.addEventListener("transitionend", finishReveal);

@@ -7,7 +7,7 @@ if (carousel) {
   const previous=carousel.querySelector<HTMLButtonElement>("[data-carousel-previous]");
   const next=carousel.querySelector<HTMLButtonElement>("[data-carousel-next]");
   const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
-  const duration=5000;
+  const duration=5500;
   let index=0,timeout=0,touchStartX=0,touchStartY=0;
   let pausedByUser=false,transitioning=false;
 

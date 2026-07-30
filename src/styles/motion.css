@@ -33,6 +33,31 @@ html.js.motion-ready [data-home-reveal].is-visible {
   transition-delay:calc(var(--reveal-index,0) * 135ms);
 }
 
+/* Home-page lift: reserved for large screens so mobile remains immediate and light. */
+@media (min-width:1024px) {
+  html.js.motion-ready [data-home-reveal],
+  html.js.motion-ready [data-home-lift] {
+    opacity:0;
+    transform:translate3d(0,38px,0) scale(.985);
+    will-change:opacity,transform;
+  }
+  html.js.motion-ready [data-home-section-lift] {
+    transform:translate3d(0,24px,0);
+  }
+  html.js.motion-ready [data-home-reveal].is-visible,
+  html.js.motion-ready [data-home-lift].is-visible {
+    opacity:1;
+    transform:translate3d(0,0,0) scale(1);
+    transition:
+      opacity 620ms var(--ease-smooth),
+      transform 820ms var(--ease-smooth);
+    transition-delay:calc(var(--reveal-index,0) * 70ms);
+  }
+  html.js.motion-ready [data-home-section-lift].is-visible {
+    transform:translate3d(0,0,0);
+  }
+}
+
 html.js.motion-ready [data-page-enter] {
   opacity:0;
   transform:translate3d(0,14px,0);

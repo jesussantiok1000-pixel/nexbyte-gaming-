@@ -4,40 +4,36 @@ import "../../styles/hero-carousel.css";
 type HeroSlide = {
   id: string;
   image: string;
-  imageAvif: string;
   eyebrow: string;
-  titleBefore: string;
-  titleAccent: string;
-  titleAfter?: string;
+  title: string;
   description: string;
-  primaryAction: { label:string; href:string };
-  secondaryAction: { label:string; href:string };
+  action: { label:string; href:string };
 };
 
 const slides: HeroSlide[] = [
   {
-    id:"ecosistema", image:"/images/heroes/hero-ecosistema.webp", imageAvif:"/images/heroes/hero-ecosistema.avif",
-    eyebrow:"TECNOLOGÍA SELECCIONADA PARA TU SETUP", titleBefore:"Encuentra tu ", titleAccent:"próxima mejora", titleAfter:".",
-    description:"Explora equipos para gaming, estudio y productividad que se adaptan a tu espacio.",
-    primaryAction:{label:"Explorar la colección",href:"#seleccion-productos"}, secondaryAction:{label:"Ver categorías",href:"/categorias"},
+    id:"experiencia",
+    image:"/images/hero/experiencia.jpg",
+    eyebrow:"EXPERIENCIA",
+    title:"Más que tecnología, una experiencia para disfrutar",
+    description:"Descubre productos seleccionados para acompañarte cada día con comodidad, estilo y confianza.",
+    action:{label:"Explorar recomendaciones",href:"#seleccion-productos"},
   },
   {
-    id:"precision", image:"/images/heroes/hero-precision.webp", imageAvif:"/images/heroes/hero-precision.avif",
-    eyebrow:"PERIFÉRICOS PARA CADA ESTILO", titleBefore:"Precisión y comodidad ", titleAccent:"en cada partida", titleAfter:".",
-    description:"Descubre teclados, ratones y audio para completar tu experiencia.",
-    primaryAction:{label:"Descubrir opciones",href:"/categorias"}, secondaryAction:{label:"Comparar productos",href:"/comparativas"},
+    id:"calidad",
+    image:"/images/hero/calidad.jpg",
+    eyebrow:"CALIDAD",
+    title:"Calidad premium en las marcas que más inspiran",
+    description:"Encuentra dispositivos reconocidos por su diseño, rendimiento y prestigio, ideales para quienes buscan lo mejor.",
+    action:{label:"Ver productos destacados",href:"/seleccion"},
   },
   {
-    id:"calidad", image:"/images/heroes/hero-calidad.webp", imageAvif:"/images/heroes/hero-calidad.avif",
-    eyebrow:"RENDIMIENTO, COMODIDAD Y ESTILO", titleBefore:"Selecciones para ", titleAccent:"tu forma de jugar", titleAfter:".",
-    description:"Encuentra una combinación equilibrada para renovar tu equipo.",
-    primaryAction:{label:"Ver productos destacados",href:"/seleccion"}, secondaryAction:{label:"Explorar categorías",href:"/categorias"},
-  },
-  {
-    id:"confianza", image:"/images/heroes/hero-confianza.webp", imageAvif:"/images/heroes/hero-confianza.avif",
-    eyebrow:"ELIGE CON CONFIANZA", titleBefore:"Descubre qué características ", titleAccent:"realmente importan", titleAfter:".",
-    description:"Compara formatos, compatibilidad y funciones antes de elegir.",
-    primaryAction:{label:"Explorar comparativas",href:"/comparativas"}, secondaryAction:{label:"Ver guías",href:"/guias"},
+    id:"setup",
+    image:"/images/hero/setup.jpg",
+    eyebrow:"SETUP",
+    title:"Completa tu estilo gaming",
+    description:"Arma un setup con personalidad: accesorios, audio y tecnología pensados para jugar, crear y destacar.",
+    action:{label:"Descubrir setup gaming",href:"/categorias/setup-gaming"},
   },
 ];
 ---
@@ -53,34 +49,26 @@ const slides: HeroSlide[] = [
       inert={index!==0}
     >
       <picture class="hero-picture">
-        <source srcset={slide.imageAvif} type="image/avif" />
-        <source srcset={slide.image} type="image/webp" />
-        <img src={`/images/heroes/hero-${slide.id}.png`} alt="" width="2048" height="768" loading={index===0 ? "eager" : "lazy"} fetchpriority={index===0 ? "high" : "low"} />
+        <img src={slide.image} alt="" width="1024" height="700" loading={index===0 ? "eager" : "lazy"} fetchpriority={index===0 ? "high" : "low"} />
       </picture>
-      <div class="hero-overlay"></div>
-      <div class="hero-copy">
+      <div class="hero-copy" data-theme={slide.id}>
         <p class="hero-eyebrow">{slide.eyebrow}</p>
-        {index===0
-          ? <h1>{slide.titleBefore}<span>{slide.titleAccent}</span>{slide.titleAfter}</h1>
-          : <h2>{slide.titleBefore}<span>{slide.titleAccent}</span>{slide.titleAfter}</h2>}
+        {index===0 ? <h1>{slide.title}</h1> : <h2>{slide.title}</h2>}
         <p class="hero-description">{slide.description}</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href={slide.primaryAction.href}>{slide.primaryAction.label}<span aria-hidden="true">→</span></a>
-          <a class="btn hero-secondary" href={slide.secondaryAction.href}>{slide.secondaryAction.label}<span aria-hidden="true">→</span></a>
+          <a class="btn hero-cta" href={slide.action.href}>{slide.action.label}<span aria-hidden="true">→</span></a>
         </div>
       </div>
     </article>)}
   </div>
-  <div class="hero-controls" aria-label="Controles de presentación">
-    <button class="hero-step" type="button" data-carousel-previous aria-label="Diapositiva anterior"><svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><path d="m12.5 5-5 5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="hero-arrows" aria-label="Controles de presentación">
+    <button class="hero-arrow hero-arrow--previous" type="button" data-carousel-previous aria-label="Diapositiva anterior"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="hero-arrow hero-arrow--next" type="button" data-carousel-next aria-label="Siguiente diapositiva"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+  <div class="hero-pagination">
     <div class="hero-dots">
       {slides.map((_,index)=><button type="button" data-carousel-dot={index} class:list={{active:index===0}} aria-label={`Mostrar diapositiva ${index + 1}`} aria-current={index===0 ? "true" : undefined}></button>)}
     </div>
-    <button class="hero-step" type="button" data-carousel-next aria-label="Siguiente diapositiva"><svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><path d="m7.5 5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="hero-toggle" type="button" data-carousel-toggle aria-label="Pausar presentación" aria-pressed="false">
-      <svg data-pause-icon aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M8 6v12M16 6v12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
-      <svg data-play-icon aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="m9 6 9 6-9 6Z" fill="currentColor"/></svg>
-    </button>
   </div>
 </section>
 <script>
